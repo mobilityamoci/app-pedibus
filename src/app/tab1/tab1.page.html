@@ -1,17 +1,25 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Tab 1
+      Chi sei?
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 1</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="bg" [fullscreen]="true">
+  <div>
+    <h1>
+      Mobilityamoci <br> Pedibus <br> App <br>
+    </h1>
+  </div>
 
-  <app-explore-container name="Tab 1 page"></app-explore-container>
+  <div class="flex m-0 justify-center items-center" id="logo">
+    <img src="../../assets/Vector.png" alt="">
+  </div>
+
+  <div id="button-container" class="flex justify-center items-center flex-column">
+    <ion-button shape="round">Genitore</ion-button>
+    <ion-button shape="round">Accompagnatore</ion-button>
+  </div>
+
 </ion-content>
