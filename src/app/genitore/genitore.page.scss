@@ -1,0 +1,21 @@
+.container {
+
+    margin-left: 2rem;
+
+    h1 {
+        font-family: "M PLUS Rounded 1c", sans-serif;
+        font-weight: 700;
+        font-style: normal;
+        font-size: 35px;
+        color: rgba(213, 235, 244, 1);
+        text-shadow: 2px 2px 0 rgba(91, 113, 204, 1),
+            -2px -2px 0 rgba(91, 113, 204, 1),
+            -2px 2px 0 rgba(91, 113, 204, 1),
+            2px -2px 0 rgba(91, 113, 204, 1),
+            2px 0 0 rgba(91, 113, 204, 1),
+            -2px 0 0 rgba(91, 113, 204, 1),
+            0 2px 0 rgba(91, 113, 204, 1),
+            0 -2px 0 rgba(91, 113, 204, 1);
+    }
+}
+

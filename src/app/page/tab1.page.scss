@@ -1,23 +1,11 @@
-ion-content{
-    box-sizing: border-box !important;
-}
-
-.m-plus-rounded-1c-regular {
-    font-family: "M PLUS Rounded 1c", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-}
-
 .bg {
-    --background: rgb(98, 101, 171);
 
     div {
-
         display: flex;
         justify-content: start;
         margin-left: 2rem;
         margin-top: 4rem;
-
+        margin-bottom: 1rem;
 
         h1 {
             margin: 0;
@@ -42,11 +30,17 @@ ion-content{
 #button-container{
     margin: 0;
     margin-top: 2rem;
-    
+
     ion-button{
-        width: 55vw;
-        padding: 1rem 2rem;
-        margin-bottom: 1.5rem;
+        width: 80vw;
+        margin-bottom: 2rem;
+        font-size: larger;
+        text-transform: capitalize;
+        color: rgba(98, 101, 171, 1);
+        --background: white;
+        --padding-top: 1rem;
+        --padding-bottom: 1rem;
+        --border-radius: 20px;
     }
 }
 

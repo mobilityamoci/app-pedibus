@@ -1,0 +1,25 @@
+<ion-header [translucent]="true">
+    <ion-toolbar>
+        <ion-title>
+            Chi sei?
+        </ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content class="bg" [fullscreen]="true">
+    <div>
+        <h1>
+            Mobilityamoci <br> Pedibus <br> App <br>
+        </h1>
+    </div>
+
+    <div class="flex m-0 justify-center items-center" id="logo">
+        <img src="../../assets/Vector.png" alt="">
+    </div>
+
+    <div id="button-container" class="flex justify-center items-center flex-column">
+        <ion-button [routerLink]="['/genitore']">Genitore</ion-button>
+        <ion-button>Accompagnatore</ion-button>
+    </div>
+
+</ion-content>
