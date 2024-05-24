@@ -1,0 +1,7 @@
+{
+  "name": "app.pedibus",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
