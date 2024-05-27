@@ -9,7 +9,11 @@ const routes: Routes = [
     {
         path: 'genitore',
         loadChildren: () => import('./genitore/genitore.module').then(m => m.GenitorePageModule)
-    },
+    },  {
+    path: 'accompagnatore',
+    loadChildren: () => import('./accompagnatore/accompagnatore.module').then( m => m.AccompagnatorePageModule)
+  },
+
 
 ];
 @NgModule({

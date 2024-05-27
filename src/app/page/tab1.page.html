@@ -1,4 +1,4 @@
-<ion-header [translucent]="true">
+<ion-header class="ion-no-border" [translucent]="true">
     <ion-toolbar>
         <ion-title>
             Chi sei?
@@ -19,7 +19,7 @@
 
     <div id="button-container" class="flex justify-center items-center flex-column">
         <ion-button [routerLink]="['/genitore']">Genitore</ion-button>
-        <ion-button>Accompagnatore</ion-button>
+        <ion-button [routerLink]="['/accompagnatore']">Accompagnatore</ion-button>
     </div>
 
 </ion-content>
