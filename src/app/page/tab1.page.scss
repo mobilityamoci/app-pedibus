@@ -1,28 +1,22 @@
 .bg {
 
-    div {
+    #logo {
         display: flex;
-        justify-content: start;
-        margin-left: 2rem;
-        margin-top: 4rem;
-        margin-bottom: 1rem;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        margin-bottom: 3rem;
+        margin-top: 2rem;
+        
 
         h1 {
             margin: 0;
             font-family: "M PLUS Rounded 1c", sans-serif;
             font-weight: 700;
             font-style: normal;
-            font-size: 45px;
+            font-size: 60px;
             color: rgba(213, 235, 244, 1);
             line-height: 70px;
-            text-shadow: 2px 2px 0 rgba(91, 113, 204, 1),
-                -2px -2px 0 rgba(91, 113, 204, 1),
-                -2px 2px 0 rgba(91, 113, 204, 1),
-                2px -2px 0 rgba(91, 113, 204, 1),
-                2px 0 0 rgba(91, 113, 204, 1),
-                -2px 0 0 rgba(91, 113, 204, 1),
-                0 2px 0 rgba(91, 113, 204, 1),
-                0 -2px 0 rgba(91, 113, 204, 1);
         }
     }
 }
@@ -41,6 +35,10 @@
         --padding-top: 1rem;
         --padding-bottom: 1rem;
         --border-radius: 20px;
+    }
+
+    div{
+        margin-top: 2rem;
     }
 }
 
