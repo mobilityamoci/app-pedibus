@@ -1,7 +1,7 @@
 <ion-header class="ion-no-border">
     <ion-toolbar>
         <ion-buttons slot="start">
-            <ion-back-button defaultHref="/home"></ion-back-button>
+            <ion-back-button defaultHref=""></ion-back-button>
         </ion-buttons>
         <ion-title>
             Genitore Page
@@ -42,8 +42,18 @@
         <p><a href="">Non hai ricevuto nessun codice?</a></p>
     </div>
 
-    <div id="code-scanner">
-
+    <div>
+        <ion-list>
+            <ion-item *ngFor="let barcode of barcodes">
+                <ion-label position="stacked">{{ barcode.format }}</ion-label>
+                <ion-input type="text" [value]="barcode.rawValue"></ion-input>
+            </ion-item>
+        </ion-list>
+        <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+            <ion-fab-button (click)="startScan()" [disabled]="!isSupported">
+                <ion-icon name="scan"></ion-icon>
+            </ion-fab-button>
+        </ion-fab>
     </div>
 
     <div id="piacenza">
