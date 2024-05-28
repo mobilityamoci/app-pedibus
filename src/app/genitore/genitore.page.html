@@ -42,7 +42,7 @@
         <p><a href="">Non hai ricevuto nessun codice?</a></p>
     </div>
 
-    <div>
+    <!-- <div>
         <ion-list>
             <ion-item *ngFor="let barcode of barcodes">
                 <ion-label position="stacked">{{ barcode.format }}</ion-label>
@@ -54,6 +54,11 @@
                 <ion-icon name="scan"></ion-icon>
             </ion-fab-button>
         </ion-fab>
+    </div> -->
+
+    <div id="code-scanner">
+        <zxing-scanner (scanSuccess)="onCodeResult($event)"></zxing-scanner>
+        <p *ngIf="qrResultString">Scanned QR Code: {{ qrResultString }}</p>
     </div>
 
     <div id="piacenza">
