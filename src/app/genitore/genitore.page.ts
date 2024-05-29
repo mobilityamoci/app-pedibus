@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Barcode, BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
+import { Router } from '@angular/router';
 import { AlertController } from "@ionic/angular";
 @Component({
   selector: 'app-genitore',
@@ -11,12 +11,13 @@ export class GenitorePage implements OnInit {
   // isSupported: boolean = false
   // barcodes: Barcode[] = []
   qrResultString?: string;
-
+  
+  constructor(private alertController: AlertController, private router: Router) { }
   onCodeResult(resultString: string) {
     this.qrResultString = resultString;
+    this.router.navigate(['/bambino', {data: this.qrResultString}])
   }
 
-  constructor(private alertController: AlertController) { }
 
   ngOnInit() {
     this
@@ -49,4 +50,3 @@ export class GenitorePage implements OnInit {
   //   await alert.present();
   // }
 }
-

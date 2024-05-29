@@ -4,6 +4,11 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
     {
         path: '',
+        redirectTo: 'home',
+        pathMatch: 'full'
+    },
+    {
+        path: 'home',
         loadChildren: () => import('./page/tab1.module').then(m => m.Tab1PageModule)
     },
     {
@@ -14,6 +19,11 @@ const routes: Routes = [
         path: 'accompagnatore',
         loadChildren: () => import('./accompagnatore/accompagnatore.module').then(m => m.AccompagnatorePageModule)
     },
+    {
+        path: 'bambino',
+        loadChildren: () => import('./bambino/bambino.module').then(m => m.BambinoPageModule)
+    },
+
 
 
 ];
