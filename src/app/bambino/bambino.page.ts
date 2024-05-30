@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { DataTransferService } from '../data-transfer.service';
 
 @Component({
   selector: 'app-bambino',
@@ -9,10 +10,9 @@ import { ActivatedRoute } from '@angular/router';
 export class BambinoPage implements OnInit {
   qrData: any
 
-  constructor(private route: ActivatedRoute) { }
+  constructor(private route: ActivatedRoute, private dataTransferService: DataTransferService) { }
 
   ngOnInit() {
-    this.qrData = this.route.snapshot.paramMap.get('data')
+    this.qrData = this.dataTransferService.getData()
   }
-
 }

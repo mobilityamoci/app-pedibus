@@ -12,6 +12,9 @@
 <ion-content [fullscreen]="true">
   <div>
     <h2>Dati Ottenuti:</h2>
-    <p>{{ qrData }}</p>
+    @if (qrData){
+    <p>Nome: {{ qrData.nome}}</p>
+    <p>Cognome: {{ qrData.cognome}}</p>
+    }
   </div>
 </ion-content>
