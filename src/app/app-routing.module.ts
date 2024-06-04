@@ -5,32 +5,37 @@ const routes: Routes = [
     {
         path: '',
         redirectTo: 'home',
-        pathMatch: 'full'
+        pathMatch: 'full',
     },
     {
         path: 'home',
-        loadChildren: () => import('./page/tab1.module').then(m => m.Tab1PageModule)
+        loadChildren: () =>
+            import('./page/tab1.module').then((m) => m.Tab1PageModule),
     },
     {
         path: 'genitore',
-        loadChildren: () => import('./genitore/genitore.module').then(m => m.GenitorePageModule)
+        loadChildren: () =>
+            import('./genitore/genitore.module').then(
+                (m) => m.GenitorePageModule
+            ),
     },
     {
         path: 'accompagnatore',
-        loadChildren: () => import('./accompagnatore/accompagnatore.module').then(m => m.AccompagnatorePageModule)
+        loadChildren: () =>
+            import('./accompagnatore/accompagnatore.module').then(
+                (m) => m.AccompagnatorePageModule
+            ),
     },
     {
         path: 'bambino',
-        loadChildren: () => import('./bambino/bambino.module').then(m => m.BambinoPageModule)
+        loadChildren: () =>
+            import('./bambino/bambino.module').then((m) => m.BambinoPageModule),
     },
-
-
-
 ];
 @NgModule({
     imports: [
-        RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })
+        RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules }),
     ],
-    exports: [RouterModule]
+    exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

@@ -147,14 +147,36 @@
             </svg>
 
             <div id="child-info">
-                <p class="bold">Optimus</p>
-                <p class="bold">Prime</p>
-                <p class="smaller">1500 anni</p>
-                <p class="smaller">Scuola</p>
-                @if (qrData){
-                <p>Nome: {{ qrData.nome}}</p>
-                <p>Cognome: {{ qrData.cognome}}</p>
-                }
+                <p>{{ qrData.nome}}</p>
+                <p>{{ qrData.cognome}}</p>
+                <p>{{ qrData.anni }}</p>
+                <p>{{ qrData.scuola }} {{ qrData.classe }}</p>
+            </div>
+        </div>
+        <div id="calendar">
+            <h5>Disponibilità</h5>
+            <div>
+                <!--TODO da mettere poi qui sotto =>  min="2024-08-31T00:00:00" -->
+                <ion-datetime
+                    locale="it-IT"
+                    appApplyStyles
+                    presentation="date"
+                    monthValues="1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12"
+                    [highlightedDates]="highlightedDates"
+                    [firstDayOfWeek]="1"
+                    [multiple]="true"
+                    [isDateEnabled]="isWeekday"
+                ></ion-datetime>
+            </div>
+        </div>
+
+        <div id="map-start">
+            <h5>Percorso</h5>
+            <div class="map-container">
+                <div id="map"></div>
+                <h3>La tua fermata</h3>
+                <p>{{ qrData.fermata }}</p>
+                <p>Orario {{ qrData.orario }}</p>
             </div>
         </div>
     </div>
