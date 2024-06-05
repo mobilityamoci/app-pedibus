@@ -166,6 +166,7 @@
                     [firstDayOfWeek]="1"
                     [multiple]="true"
                     [isDateEnabled]="isWeekday"
+                    (ionChange)="onDateChange($event)"
                 ></ion-datetime>
             </div>
         </div>

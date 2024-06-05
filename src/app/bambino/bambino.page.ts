@@ -17,11 +17,18 @@ export class BambinoPage implements OnInit {
     ) {}
 
     ngOnInit() {
-        this.qrData = this.dataTransferService.getData();
+        this.loadStudenti(this.qrData.id);
+        this.leafletMap();
     }
 
     ionViewDidEnter() {
         this.leafletMap();
+    }
+
+    loadStudenti(studentId: string) {
+        this.dataTransferService.getStudente(studentId).subscribe((data) => {
+            this.qrData = data;
+        });
     }
 
     leafletMap() {
@@ -59,16 +66,13 @@ export class BambinoPage implements OnInit {
     highlightedDates = (isoString: any) => {
         const date = new Date(isoString);
         const utcDay = date.getUTCDay();
-        console.log('isPresent' + this.qrData.assenze, 'utcDay ' + utcDay);
-        const isPresent = this.qrData.assenze;
         const formattedDate = date.toDateString();
+        const isPresent = this.qrData.assenze;
 
-        for (let i = 0; i < isPresent.length; i++) {
-            if (isPresent[i].includes(formattedDate)) {
-                return {
-                    backgroundColor: 'rgba(200, 37, 29, 1)',
-                };
-            }
+        if (isPresent.includes(formattedDate)) {
+            return {
+                backgroundColor: 'rgba(200, 37, 29, 1)',
+            };
         }
 
         if (utcDay === 0 || utcDay === 6) {
@@ -82,4 +86,46 @@ export class BambinoPage implements OnInit {
             };
         }
     };
+
+    onDateChange(event: any) {
+        const selectedDate = new Date(event.detail.value).toDateString();
+        const index = this.qrData.assenze.indexOf(selectedDate);
+
+        if (index === -1) {
+            this.qrData.assenze.push(selectedDate);
+        } else {
+            this.qrData.assenze.splice(index, 1);
+        }
+
+        this.dataTransferService
+            .updateStudente(this.qrData.id, this.qrData)
+            .subscribe((response) => {
+                this.updateHighlightedDates();
+            });
+    }
+
+    updateHighlightedDates() {
+        this.highlightedDates = (isoString: any) => {
+            const date = new Date(isoString);
+            const formattedDate = date.toDateString();
+            const isPresent = this.qrData.assenze;
+
+            if (isPresent.includes(formattedDate)) {
+                return {
+                    backgroundColor: 'rgba(200, 37, 29, 1)',
+                };
+            }
+
+            if (date.getUTCDay() === 0 || date.getUTCDay() === 6) {
+                return {
+                    textColor: 'black',
+                    backgroundColor: 'rgba(200, 37, 29, 1)',
+                };
+            } else {
+                return {
+                    backgroundColor: 'rgba(122, 225, 138, 1)',
+                };
+            }
+        };
+    }
 }

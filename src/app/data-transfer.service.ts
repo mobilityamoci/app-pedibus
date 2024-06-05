@@ -1,21 +1,37 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
 export class DataTransferService {
-  private data: any;
-  constructor() { }
+    private data: any;
+    private apiUrl = 'http://localhost:3000/studenti';
 
-  setData(data: any) {
-    this.data = data;
-  }
+    constructor(private http: HttpClient) {}
 
-  getData() {
-    return this.data;
-  }
+    setData(data: any) {
+        this.data = data;
+    }
 
-  clearData() {
-    this.data = null;
-  }
+    getData() {
+        return this.data;
+    }
+
+    clearData() {
+        this.data = null;
+    }
+
+    getStudente(id: string): Observable<any> {
+      return this.http.get<any>(`${this.apiUrl}/${id}`)
+    }
+
+    getStudenti(): Observable<any> {
+        return this.http.get<any>(this.apiUrl);
+    }
+
+    updateStudente(id: string, data: any): Observable<any> {
+        return this.http.put<any>(`${this.apiUrl}/${id}`, data);
+    }
 }
