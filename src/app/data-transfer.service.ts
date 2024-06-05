@@ -24,7 +24,7 @@ export class DataTransferService {
     }
 
     getStudente(id: string): Observable<any> {
-      return this.http.get<any>(`${this.apiUrl}/${id}`)
+        return this.http.get<any>(`${this.apiUrl}/${id}`);
     }
 
     getStudenti(): Observable<any> {

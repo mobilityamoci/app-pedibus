@@ -17,18 +17,11 @@ export class BambinoPage implements OnInit {
     ) {}
 
     ngOnInit() {
-        this.loadStudenti(this.qrData.id);
-        this.leafletMap();
+        this.qrData = this.dataTransferService.getData();
     }
 
     ionViewDidEnter() {
         this.leafletMap();
-    }
-
-    loadStudenti(studentId: string) {
-        this.dataTransferService.getStudente(studentId).subscribe((data) => {
-            this.qrData = data;
-        });
     }
 
     leafletMap() {
