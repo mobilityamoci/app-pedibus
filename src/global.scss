@@ -39,4 +39,5 @@
 @import "~leaflet/dist/leaflet.css";
 * {
     --background: rgb(98, 101, 171);
+        --ion-color-base: var(--ion-color-primary, transparent) !important;
 }

@@ -18,14 +18,25 @@ export class BambinoPage implements OnInit {
 
     ngOnInit() {
         this.qrData = this.dataTransferService.getData();
+        this.getPercorso(this.qrData.idPercorso);
     }
 
     ionViewDidEnter() {
-        this.leafletMap();
+        const idPercorso = this.qrData.idPercorso;
+        this.getPercorso(idPercorso);
     }
 
-    leafletMap() {
-        const percorso = this.qrData.percorso;
+    getPercorso(idPercorso: string) {
+        this.dataTransferService
+            .getPercorso(idPercorso)
+            .subscribe((percorso: any) => {
+                const coordinates = percorso.percorso; 
+                this.leafletMap(coordinates); 
+            });
+    }
+
+    leafletMap(percorso: [number, number][]) {
+        // const percorso = this.qrData.percorso;
         const center = percorso[0];
         this.map = Leaflet.map('map').setView(center, 13);
         Leaflet.tileLayer(

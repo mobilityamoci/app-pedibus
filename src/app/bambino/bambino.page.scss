@@ -55,10 +55,10 @@ ion-content {
                 p:nth-of-type(2) {
                     margin-bottom: 0.5rem;
                 }
-                p:nth-of-type(3){
+                p:nth-of-type(3) {
                     font-size: 13px;
                 }
-                p:nth-of-type(4){
+                p:nth-of-type(4) {
                     font-size: 13px;
                 }
             }
@@ -84,6 +84,17 @@ ion-content {
                 border: dashed;
                 border-color: rgba(98, 101, 171, 1);
             }
+            // ion-datetime::part(active) {
+            //     background-color: none;
+            // }
+            $absent-color: rgba(200, 37, 29, 1);
+            $present-color: rgba(122, 225, 138, 1);
+
+            // ion-datetime::part(active){
+            //     @if ($day == $present-color){
+            //         background-color: $absent-color;
+            //     }
+            // }
         }
     }
 }
@@ -92,7 +103,7 @@ ion-content {
     h5 {
         font-weight: 400;
         margin-top: 0;
-        margin-bottom: .5rem;
+        margin-bottom: 0.5rem;
         font-size: 16px;
     }
     .map-container {
@@ -101,9 +112,9 @@ ion-content {
         border-radius: 15px;
         padding: 1rem;
 
-        p{
+        p {
             margin: 0;
-            margin-bottom: .3rem;
+            margin-bottom: 0.3rem;
             font-size: 13px;
         }
         #map {

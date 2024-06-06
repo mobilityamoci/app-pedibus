@@ -8,6 +8,7 @@ import { Observable } from 'rxjs';
 export class DataTransferService {
     private data: any;
     private apiUrl = 'http://localhost:3000/studenti';
+    private baseUrl = 'http://localhost:3000';
 
     constructor(private http: HttpClient) {}
 
@@ -33,5 +34,16 @@ export class DataTransferService {
 
     updateStudente(id: string, data: any): Observable<any> {
         return this.http.put<any>(`${this.apiUrl}/${id}`, data);
+    }
+
+    getPercorso(idPercorso: string): Observable<any> {
+        console.log('ID Percorso:', idPercorso); // Отладочный вывод
+        return this.http.get<any>(`${this.baseUrl}/percorsi/${idPercorso}`);
+    }
+
+    checkDateInDatabase(studentId: string, date: string): Observable<boolean> {
+        return this.http.get<boolean>(
+            `${this.apiUrl}/${studentId}/checkDate/${date}`
+        );
     }
 }
