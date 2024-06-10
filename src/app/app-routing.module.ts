@@ -31,6 +31,11 @@ const routes: Routes = [
         loadChildren: () =>
             import('./bambino/bambino.module').then((m) => m.BambinoPageModule),
     },
+    {
+        path: 'fermate',
+        loadChildren: () =>
+            import('./fermate/fermate.module').then((m) => m.FermatePageModule),
+    },
 ];
 @NgModule({
     imports: [

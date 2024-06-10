@@ -1,0 +1,28 @@
+* {
+    --background: white !important;
+    font-family: "Inter", sans-serif;
+}
+
+ion-content {
+    #head {
+        margin: 0 2rem;
+        margin-top: 2rem;
+        margin-bottom: 4.5rem;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+    }
+
+    #list {
+        border-left: 4px solid blueviolet;
+        height: 300px;
+        margin: 0 2rem;
+    }
+
+    ion-accordion-group {
+        ion-item::part(native) {
+            background-color: none;
+            color: rgba(98, 101, 171, 1);
+        }
+    }
+}

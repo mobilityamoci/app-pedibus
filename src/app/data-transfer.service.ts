@@ -37,7 +37,6 @@ export class DataTransferService {
     }
 
     getPercorso(idPercorso: string): Observable<any> {
-        console.log('ID Percorso:', idPercorso); // Отладочный вывод
         return this.http.get<any>(`${this.baseUrl}/percorsi/${idPercorso}`);
     }
 
@@ -45,5 +44,9 @@ export class DataTransferService {
         return this.http.get<boolean>(
             `${this.apiUrl}/${studentId}/checkDate/${date}`
         );
+    }
+
+    getFermata(id: string): Observable<any>{
+        return this.http.get<any>(`${this.baseUrl}/accompagnatore/${id}`)
     }
 }
