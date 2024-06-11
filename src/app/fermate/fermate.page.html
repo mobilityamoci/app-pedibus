@@ -122,21 +122,51 @@
         </svg>
     </div>
 
-    <div id="list">
-        <p>{{ qrData.scuola }}</p>
-        <ion-accordion-group>
-            @for (fermata of fermate; track $index) {
-            <ion-accordion>
-                <ion-item slot="header" color="light">
-                    <ion-label>{{ fermata.fermata }}</ion-label>
-                </ion-item>
-                @for (studente of fermata.studenti; track $index) {
-                <div class="ion-padding" slot="content">
-                    {{ studente }}
+    <div class="wrapper">
+        <section class="drawers">
+            <!-- @for (fermata of fermate; track $index) { -->
+            <div>
+                <svg
+                    width="13"
+                    height="13"
+                    viewBox="0 0 13 13"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <circle
+                        cx="6.5"
+                        cy="6.5"
+                        r="5.5"
+                        fill="white"
+                        stroke="black"
+                        stroke-width="2"
+                    />
+                </svg>
+            </div>
+            <div id="header-accordion">
+                <input
+                    type="checkbox"
+                    name="drawer-radios"
+                    id="drawer-1"
+                    class="sr-only"
+                />
+                <label for="drawer-1"
+                    >Via Sulla Naboo <span>&#10095;</span>
+                    <!-- {{ fermata.fermata }} --></label
+                >
+            </div>
+
+            <!-- @for (studente of fermata.studenti; track $index) { -->
+            <div class="drawer">
+                <div class="drawer-content">
+                    <p>
+                        Students
+                        <!-- {{ studente }} -->
+                    </p>
                 </div>
-                }
-            </ion-accordion>
-            }
-        </ion-accordion-group>
+            </div>
+            <!-- } -->
+            <!-- } -->
+        </section>
     </div>
 </ion-content>

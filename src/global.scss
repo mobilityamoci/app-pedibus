@@ -41,3 +41,13 @@
     --background: rgb(98, 101, 171);
         --ion-color-base: var(--ion-color-primary, transparent) !important;
 }
+
+:root.md{
+    --ion-color-violet: rgba(98, 101, 171, 1);
+    --ion-background-color: none !important;
+    --ion-color-primary: white !important;
+}
+
+:host{
+    --min-height: 10px !important;
+}

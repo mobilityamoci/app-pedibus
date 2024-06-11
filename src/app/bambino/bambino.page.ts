@@ -80,14 +80,14 @@ export class BambinoPage implements OnInit {
 
         if (isPresent.includes(formattedDate)) {
             return {
-                backgroundColor: 'rgba(200, 37, 29, 1)',
+                backgroundColor: 'rgba(225, 122, 122, 1)',
             };
         }
 
         if (utcDay === 0 || utcDay === 6) {
             return {
                 textColor: 'black',
-                backgroundColor: 'rgba(200, 37, 29, 1)',
+                backgroundColor: 'rgba(225, 122, 122, 1)',
             };
         } else {
             return {

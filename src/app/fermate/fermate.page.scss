@@ -1,6 +1,6 @@
 * {
     --background: white !important;
-    font-family: "Inter", sans-serif;
+    font-family: "Inter", sans-serif !important;
 }
 
 ion-content {
@@ -14,15 +14,95 @@ ion-content {
     }
 
     #list {
-        border-left: 4px solid blueviolet;
-        height: 300px;
         margin: 0 2rem;
+        position: relative !important;
+
+        ion-accordion-group {
+            border-left: 4px solid blueviolet;
+
+            ion-item[slot="header"] {
+                color: rgba(98, 101, 171, 1);
+                margin: 0 auto;
+                svg {
+                    position: absolute !important;
+                    top: 0rem;
+                    bottom: 50%;
+                    left: -5rem;
+                    right: 100px;
+                }
+            }
+            div[slot="content"] {
+                background: rgba(239, 245, 247, 1);
+                margin: 0.5rem 0;
+                padding: 0.3rem;
+                border-radius: 6px;
+                color: black;
+                background-color: none;
+                font-size: 16px;
+                font-weight: 400;
+            }
+
+            ion-label {
+                margin: 0 !important;
+            }
+        }
     }
 
-    ion-accordion-group {
-        ion-item::part(native) {
-            background-color: none;
-            color: rgba(98, 101, 171, 1);
+    .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border-width: 0;
+    }
+
+    .wrapper {
+        margin: 0 2rem;
+        min-height: 100svh;
+        display: flex;
+        flex-direction: column;
+
+        #header-accordion {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .drawer {
+            width: 100%;
+            display: grid;
+            grid-template-rows: 0px; /* set height to 0 - this will be modified when radio checkbox checked*/
+            transition: grid-template-rows 500ms
+                cubic-bezier(0.47, 1.64, 0.41, 0.8);
+        }
+        input:checked + label + .drawer {
+            grid-template-rows: var(--content-height, 100px);
+        }
+        input:checked + label > span {
+            rotate: 90deg;
+        }
+
+        .drawer-content {
+            overflow-y: auto;
+            border-bottom: 1px solid #ffffff30;
+        }
+        label {
+            padding: 1rem;
+            display: block;
+            cursor: pointer;
+            background-color: #00000030;
+            display: flex;
+            gap: 0.75rem;
+        }
+        label > span {
+            transition: rotate 300ms;
+        }
+        p {
+            padding: 1rem;
         }
     }
 }
