@@ -123,6 +123,7 @@
     </div>
 
     <div id="accordion-container">
+        @for (fermata of fermate; track $index) {
         <div class="list">
             <ion-accordion-group>
                 <div class="container-linea-percorso">
@@ -147,107 +148,21 @@
                         </svg>
                     </div>
                 </div>
-                <!-- @for (fermata of fermate; track $index) { -->
+
                 <ion-accordion>
                     <ion-item slot="header" color="none">
                         <ion-label>
-                            <p>fermata</p>
-                            <!-- {{ fermata.fermata }} -->
+                            <p>fermata {{ fermata.fermata }}</p>
                         </ion-label>
                     </ion-item>
-                    <!-- @for (studente of fermata.studenti; track $index) { -->
+                    @for (studente of fermata.studenti; track $index) {
                     <div slot="content">
-                        <!-- {{ studente }} -->
-                        <p>nomi</p>
+                        <p>nomi {{ studente }}</p>
                     </div>
-                    <!-- } -->
+                    }
                 </ion-accordion>
-                <!-- } -->
             </ion-accordion-group>
         </div>
-        <div class="list">
-            <ion-accordion-group>
-                <div class="container-linea-percorso">
-                    <div class="linea-percorso"></div>
-                    <div class="circle">
-                        <svg
-                            class=".ion-float-left"
-                            width="14"
-                            height="14"
-                            viewBox="0 0 14 14"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <circle
-                                cx="7"
-                                cy="7"
-                                r="5.5"
-                                fill="white"
-                                stroke="black"
-                                stroke-width="2"
-                            />
-                        </svg>
-                    </div>
-                </div>
-                <!-- @for (fermata of fermate; track $index) { -->
-                <ion-accordion>
-                    <ion-item slot="header" color="none">
-                        <ion-label>
-                            fermata
-                            <!-- {{ fermata.fermata }} -->
-                        </ion-label>
-                    </ion-item>
-                    <!-- @for (studente of fermata.studenti; track $index) { -->
-                    <div class="ion-no-padding ion-no-margin" slot="content">
-                        <!-- {{ studente }} -->
-                        <p>nomi</p>
-                    </div>
-                    <!-- } -->
-                </ion-accordion>
-                <!-- } -->
-            </ion-accordion-group>
-        </div>
-        <div class="list">
-            <ion-accordion-group>
-                <div class="container-linea-percorso">
-                    <div class="linea-percorso"></div>
-                    <div class="circle">
-                        <svg
-                            class=".ion-float-left"
-                            width="14"
-                            height="14"
-                            viewBox="0 0 14 14"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <circle
-                                cx="7"
-                                cy="7"
-                                r="5.5"
-                                fill="white"
-                                stroke="black"
-                                stroke-width="2"
-                            />
-                        </svg>
-                    </div>
-                </div>
-                <!-- @for (fermata of fermate; track $index) { -->
-                <ion-accordion>
-                    <ion-item slot="header" color="none">
-                        <ion-label>
-                            fermata
-                            <!-- {{ fermata.fermata }} -->
-                        </ion-label>
-                    </ion-item>
-                    <!-- @for (studente of fermata.studenti; track $index) { -->
-                    <div slot="content">
-                        <!-- {{ studente }} -->
-                        <p>nomi</p>
-                    </div>
-                    <!-- } -->
-                </ion-accordion>
-                <!-- } -->
-            </ion-accordion-group>
-        </div>
+        }
     </div>
 </ion-content>
