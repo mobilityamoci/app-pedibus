@@ -24,34 +24,5 @@ export class FermatePage implements OnInit {
             });
     }
 
-    ngAfterViewInit(): void {
-        this.calculateAndSetHeights();
-    }
 
-    ngOnDestroy(): void {
-        window.removeEventListener(
-            'resize',
-            this.calculateAndSetHeights.bind(this)
-        );
-    }
-
-    private calculateAndSetHeights(): void {
-        const drawersSection = document.querySelector(
-            '.drawers'
-        ) as HTMLElement;
-        const labels = drawersSection.querySelectorAll('label');
-        const drawerContents =
-            drawersSection.querySelectorAll('.drawer-content');
-
-        let availableHeight = drawersSection.offsetHeight;
-        labels.forEach((label) => {
-            availableHeight -= (label as HTMLElement).offsetHeight;
-        });
-
-        const contentHeight = availableHeight / drawerContents.length;
-        drawersSection.style.setProperty(
-            '--content-height',
-            `${contentHeight}px`
-        );
-    }
 }
