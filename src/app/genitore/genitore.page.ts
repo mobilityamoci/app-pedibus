@@ -4,37 +4,46 @@ import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { DataTransferService } from '../data-transfer.service';
 import { ZXingScannerComponent } from '@zxing/ngx-scanner';
+import { AuthService } from '../authService';
 @Component({
     selector: 'app-genitore',
     templateUrl: './genitore.page.html',
     styleUrls: ['./genitore.page.scss'],
 })
-export class GenitorePage implements OnInit{
+export class GenitorePage {
     qrResultString?: string;
-    data: any = {};
+    // data: any = {};
 
     constructor(
         private router: Router,
-        private dataTransferService: DataTransferService
+        private dataTransferService: DataTransferService,
+        private authServ: AuthService
     ) {}
-    ngOnInit(): void {
-        this.scanner.scanStart()
-    }
+
     @ViewChild(ZXingScannerComponent) scanner!: ZXingScannerComponent;
 
-    onCodeResult(resultString: string) {
-        this.qrResultString = resultString;
-        const id = this.qrResultString;
+    ionViewDidEnter() {
+        this.scanner.scanStart();
+    }
 
-        this.dataTransferService.getStudente(id).subscribe(
-            (data) => {
-                this.dataTransferService.setData(data);
+    onClick() {
+        this.scanner.scanStart();
+    }
+    // ngAfterViewInit{
+
+    // }
+    onCodeResult(resultString: string) {
+        this.scanner.scanStop()
+        this.dataTransferService.authenticate(resultString, 'parent').subscribe(
+            (response) => {
+                // this.scanner.scanStop();
+                this.authServ.setToken(response.data.token)
                 this.router.navigate(['/bambino']);
             },
             (error) => {
                 console.error('Error fetching student data', error);
             }
         );
-        this.scanner.scanStop()
     }
 }
+

@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { DataTransferService } from '../data-transfer.service';
 import * as Leaflet from 'leaflet';
 import { IonDatetime } from '@ionic/angular';
+import { QrData } from '../interfaces/qr-data';
 
 @Component({
     selector: 'app-bambino',
@@ -10,21 +11,38 @@ import { IonDatetime } from '@ionic/angular';
     styleUrls: ['./bambino.page.scss'],
 })
 export class BambinoPage implements OnInit {
-    qrData: any;
     private map!: Leaflet.Map;
     constructor(
         private route: ActivatedRoute,
-        private dataTransferService: DataTransferService
+        private dataTransferService: DataTransferService,
+        private qrData: QrData
     ) {}
 
     @ViewChild(IonDatetime) datetime!: IonDatetime;
     ngOnInit() {
-        this.qrData = this.dataTransferService.getData();
-        this.getPercorso(this.qrData.idPercorso);
+        this.loadChild();
+        this.getPercorso(this.qrData.percorso);
+    }
+
+    loadChild() {
+        this.dataTransferService.getStudente().subscribe(
+            (response) => {
+                console.log(response);
+                // this.qrData.scuola = response.data.scuola;
+                // this.qrData.classe = response.data.classe;
+                // this.qrData.orario = response.data.orario;
+                // this.qrData.fermata = response.data.fermata;
+                // this.qrData.percorso = response.data.percorso_id;
+                // this.qrData.assenze = response.data.absenceDays;
+            },
+            (error) => {
+                console.error('Error fetching student data', error);
+            }
+        );
     }
 
     ionViewDidEnter() {
-        const idPercorso = this.qrData.idPercorso;
+        const idPercorso = this.qrData.percorso;
         this.getPercorso(idPercorso);
     }
 
@@ -40,16 +58,16 @@ export class BambinoPage implements OnInit {
     leafletMap(percorso: [number, number][]) {
         // const startPoint = Leaflet.latLng(percorso[0][0], percorso[0][1]);
         // const endPoint = Leaflet.latLng(percorso[percorso.length - 1][0], percorso[percorso.length - 1][1]);
-    
+
         this.map = Leaflet.map('map');
         Leaflet.tileLayer(
             'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
         ).addTo(this.map);
-    
+
         for (let i = 0; i < percorso.length - 1; i++) {
             const start = Leaflet.latLng(percorso[i][0], percorso[i][1]);
             const end = Leaflet.latLng(percorso[i + 1][0], percorso[i + 1][1]);
-    
+
             const line = Leaflet.polyline([start, end], {
                 color: 'rgba(98, 101, 171, 1)',
                 weight: 4,
@@ -58,12 +76,13 @@ export class BambinoPage implements OnInit {
             });
             line.addTo(this.map);
         }
-    
-        // Regola view in base alla grandezza del percorso 
-        const bounds = Leaflet.latLngBounds(percorso.map(point => Leaflet.latLng(point[0], point[1])));
+
+        // Regola view in base alla grandezza del percorso
+        const bounds = Leaflet.latLngBounds(
+            percorso.map((point) => Leaflet.latLng(point[0], point[1]))
+        );
         this.map.fitBounds(bounds);
     }
-    
 
     isWeekday = (dateString: string) => {
         const date = new Date(dateString);

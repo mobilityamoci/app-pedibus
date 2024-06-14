@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -7,9 +7,9 @@ import { Observable } from 'rxjs';
 })
 export class DataTransferService {
     private data: any;
-    private apiUrl = 'http://localhost:3000/studenti';
-    private baseUrl = 'http://localhost:3000';
-
+    private baseUrl = 'http://localhost:3000/studenti';
+    private apiUrl = 'http://127.0.0.1:8000/api';
+    private token!: string;
     constructor(private http: HttpClient) {}
 
     setData(data: any) {
@@ -24,8 +24,31 @@ export class DataTransferService {
         this.data = null;
     }
 
-    getStudente(id: string): Observable<any> {
-        return this.http.get<any>(`${this.apiUrl}/${id}`);
+    authenticate(uuid: string, type: string){
+        return this.http.post<any>(`${this.apiUrl}/authenticate`, {
+            uuid: uuid,
+            type: type
+        });
+    }
+
+    getStudente(): Observable<any> {
+        const token = localStorage.getItem('token');
+        const headers = new HttpHeaders({
+            type: ['parent'],
+            Authorization: `Bearer ${token}`,
+        });
+
+        const url = `${this.apiUrl}/parent`; 
+        console.log('Request URL:', url); 
+        console.log(
+            'Headers:',
+            headers
+                .keys()
+                .map((key) => `${key}: ${headers.get(key)}`)
+                .join(', ')
+        ); 
+
+        return this.http.get<any>(url, { headers });
     }
 
     getStudenti(): Observable<any> {
@@ -46,7 +69,7 @@ export class DataTransferService {
         );
     }
 
-    getFermata(id: string): Observable<any>{
-        return this.http.get<any>(`${this.baseUrl}/accompagnatore/${id}`)
+    getFermata(id: string): Observable<any> {
+        return this.http.get<any>(`${this.baseUrl}/accompagnatore/${id}`);
     }
 }
