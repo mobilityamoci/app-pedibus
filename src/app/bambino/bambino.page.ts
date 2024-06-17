@@ -22,17 +22,11 @@ export class BambinoPage {
 
     @ViewChild(IonDatetime) datetime!: IonDatetime;
 
-    // ngOnInit() {
-    //     this.loadChild();
-    // }
-
     loadChild() {
         this.dataTransferService.getStudente().subscribe(
             (response) => {
-                // Разверните вложенный объект data
                 const studentData: Studente = response.data;
 
-                // Заполните qrData соответствующими значениями
                 this.qrData.scuola = studentData.scuola;
                 this.qrData.classe = studentData.classe;
                 this.qrData.orario = studentData.orario;
