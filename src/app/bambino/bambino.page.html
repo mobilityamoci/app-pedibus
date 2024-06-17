@@ -8,6 +8,7 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
+    @if (loaded) {
     <div id="head">
         <!-- Pedibus logo -->
         <svg
@@ -121,7 +122,6 @@
             </defs>
         </svg>
     </div>
-
     <div id="body-content">
         <h5>Informazioni</h5>
         <div id="info">
@@ -181,4 +181,9 @@
             </div>
         </div>
     </div>
+    } @else{
+    <div id="spinner">
+        <ion-spinner name="dots"></ion-spinner>
+    </div>
+    }
 </ion-content>

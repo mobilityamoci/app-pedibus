@@ -3,37 +3,57 @@ import { ActivatedRoute } from '@angular/router';
 import { DataTransferService } from '../data-transfer.service';
 import * as Leaflet from 'leaflet';
 import { IonDatetime } from '@ionic/angular';
-import { QrData } from '../interfaces/qr-data';
+import { Studente } from '../interfaces/studente';
 
 @Component({
     selector: 'app-bambino',
     templateUrl: './bambino.page.html',
     styleUrls: ['./bambino.page.scss'],
 })
-export class BambinoPage implements OnInit {
+export class BambinoPage {
     private map!: Leaflet.Map;
+    qrData: Studente = {} as Studente;
+    public loaded: boolean = false;
+
     constructor(
         private route: ActivatedRoute,
-        private dataTransferService: DataTransferService,
-        private qrData: QrData
+        private dataTransferService: DataTransferService
     ) {}
 
     @ViewChild(IonDatetime) datetime!: IonDatetime;
-    ngOnInit() {
-        this.loadChild();
-        this.getPercorso(this.qrData.percorso);
-    }
+
+    // ngOnInit() {
+    //     this.loadChild();
+    // }
 
     loadChild() {
         this.dataTransferService.getStudente().subscribe(
             (response) => {
-                console.log(response);
-                // this.qrData.scuola = response.data.scuola;
-                // this.qrData.classe = response.data.classe;
-                // this.qrData.orario = response.data.orario;
-                // this.qrData.fermata = response.data.fermata;
-                // this.qrData.percorso = response.data.percorso_id;
-                // this.qrData.assenze = response.data.absenceDays;
+                // Разверните вложенный объект data
+                const studentData: Studente = response.data;
+
+                // Заполните qrData соответствующими значениями
+                this.qrData.scuola = studentData.scuola;
+                this.qrData.classe = studentData.classe;
+                this.qrData.orario = studentData.orario;
+                this.qrData.fermata = studentData.fermata;
+                this.qrData.percorso_id = studentData.percorso_id;
+                this.qrData.absenceDays = studentData.absenceDays;
+                console.log('Percorso ID:', this.qrData.percorso_id);
+                console.log('Student Data:', studentData);
+
+                this.dataTransferService
+                    .getPercorso(this.qrData.percorso_id)
+                    .subscribe((response: any) => {
+                        const coordinates = response.data.percorso;
+                        console.log(coordinates);
+                        this.loaded = true;
+                        console.log(this.loaded);
+
+                        setTimeout(() => {
+                            this.leafletMap(coordinates);
+                        }, 1000);
+                    });
             },
             (error) => {
                 console.error('Error fetching student data', error);
@@ -42,23 +62,10 @@ export class BambinoPage implements OnInit {
     }
 
     ionViewDidEnter() {
-        const idPercorso = this.qrData.percorso;
-        this.getPercorso(idPercorso);
-    }
-
-    getPercorso(idPercorso: string) {
-        this.dataTransferService
-            .getPercorso(idPercorso)
-            .subscribe((percorso: any) => {
-                const coordinates = percorso.percorso;
-                this.leafletMap(coordinates);
-            });
+        this.loadChild();
     }
 
     leafletMap(percorso: [number, number][]) {
-        // const startPoint = Leaflet.latLng(percorso[0][0], percorso[0][1]);
-        // const endPoint = Leaflet.latLng(percorso[percorso.length - 1][0], percorso[percorso.length - 1][1]);
-
         this.map = Leaflet.map('map');
         Leaflet.tileLayer(
             'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
@@ -77,7 +84,6 @@ export class BambinoPage implements OnInit {
             line.addTo(this.map);
         }
 
-        // Regola view in base alla grandezza del percorso
         const bounds = Leaflet.latLngBounds(
             percorso.map((point) => Leaflet.latLng(point[0], point[1]))
         );
@@ -86,16 +92,24 @@ export class BambinoPage implements OnInit {
 
     isWeekday = (dateString: string) => {
         const date = new Date(dateString);
+        const today = new Date();
         const utcDay = date.getUTCDay();
 
-        return utcDay !== 0 && utcDay !== 6;
+        date.setHours(0, 0, 0, 0);
+        today.setHours(0, 0, 0, 0);
+
+        return date >= today && today && utcDay !== 0 && utcDay !== 6;
     };
 
     highlightedDates = (isoString: any) => {
         const date = new Date(isoString);
+        const formattedDate = this.formatDate(date);
+        const isPresent = this.qrData.absenceDays || [];
+        const today = new Date();
         const utcDay = date.getUTCDay();
-        const formattedDate = date.toDateString();
-        const isPresent = this.qrData.assenze;
+
+        date.setHours(0, 0, 0, 0);
+        today.setHours(0, 0, 0, 0);
 
         if (isPresent.includes(formattedDate)) {
             return {
@@ -108,56 +122,85 @@ export class BambinoPage implements OnInit {
                 textColor: 'black',
                 backgroundColor: 'rgba(225, 122, 122, 1)',
             };
-        } else {
+        }
+
+        if (date < today) {
             return {
-                backgroundColor: 'rgba(122, 225, 138, 1)',
+                backgroundColor: 'rgba(169, 169, 169, 1)',
             };
         }
+
+        return {
+            backgroundColor: 'rgba(122, 225, 138, 1)',
+        };
     };
 
-    reset() {
-        this.datetime.reset();
-    }
     onDateChange(event: any) {
-        const selectedDate = new Date(event.detail.value).toDateString();
-        const index = this.qrData.assenze.indexOf(selectedDate);
+        const selectedDate = this.formatDate(new Date(event.detail.value));
+        const index = this.qrData.absenceDays?.indexOf(selectedDate);
 
         if (index === -1) {
-            this.qrData.assenze.push(selectedDate);
+            this.qrData.absenceDays?.push(selectedDate);
         } else {
-            this.qrData.assenze.splice(index, 1);
+            this.qrData.absenceDays?.splice(index, 1);
         }
 
         this.dataTransferService
-            .updateStudente(this.qrData.id, this.qrData)
+            .updateStudente({ days: this.qrData.absenceDays })
             .subscribe((response) => {
-                this.updateHighlightedDates();
+                this.highlightedDates(response);
+                console.log(response);
+                
                 this.reset();
             });
     }
 
-    updateHighlightedDates() {
-        this.highlightedDates = (isoString: any) => {
-            const date = new Date(isoString);
-            const formattedDate = date.toDateString();
-            const isPresent = this.qrData.assenze;
+    // updateHighlightedDates() {
+    //     this.highlightedDates = (isoString: any) => {
+    //         const date = new Date(isoString);
+    //         const formattedDate = this.formatDate(date);
+    //         const isPresent = this.qrData.absenceDays || [];
+    //         const today = new Date();
+    //         const utcDay = date.getUTCDay();
 
-            if (isPresent.includes(formattedDate)) {
-                return {
-                    backgroundColor: 'rgba(200, 37, 29, 1)',
-                };
-            }
+    //         date.setHours(0, 0, 0, 0);
+    //         today.setHours(0, 0, 0, 0);
 
-            if (date.getUTCDay() === 0 || date.getUTCDay() === 6) {
-                return {
-                    textColor: 'black',
-                    backgroundColor: 'rgba(200, 37, 29, 1)',
-                };
-            } else {
-                return {
-                    backgroundColor: 'rgba(122, 225, 138, 1)',
-                };
-            }
-        };
+    //         console.log(isPresent);
+
+    //         if (isPresent.includes(formattedDate)) {
+    //             return {
+    //                 backgroundColor: 'rgba(225, 122, 122, 1)',
+    //             };
+    //         }
+
+    //         if (utcDay === 0 || utcDay === 6) {
+    //             return {
+    //                 textColor: 'black',
+    //                 backgroundColor: 'rgba(225, 122, 122, 1)',
+    //             };
+    //         }
+
+    //         if (date < today) {
+    //             return {
+    //                 backgroundColor: 'rgba(169, 169, 169, 1)',
+    //             };
+    //         }
+
+    //         return {
+    //             backgroundColor: 'rgba(122, 225, 138, 1)',
+    //         };
+    //     };
+    // }
+
+    reset() {
+        this.datetime.reset();
+    }
+
+    formatDate(date: Date): string {
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        return `${year}-${month}-${day}`;
     }
 }
