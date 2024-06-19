@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { DataTransferService } from '../data-transfer.service';
@@ -10,7 +10,7 @@ import { AuthService } from '../authService';
     templateUrl: './genitore.page.html',
     styleUrls: ['./genitore.page.scss'],
 })
-export class GenitorePage {
+export class GenitorePage implements OnDestroy {
     qrResultString?: string;
     // data: any = {};
 
@@ -21,23 +21,23 @@ export class GenitorePage {
     ) {}
 
     @ViewChild(ZXingScannerComponent) scanner!: ZXingScannerComponent;
-
     ionViewDidEnter() {
         this.scanner.scanStart();
+    }
+    stopScan() {
+        this.scanner.scanStop();
     }
 
     onClick() {
         this.scanner.scanStart();
     }
-    // ngAfterViewInit{
 
-    // }
     onCodeResult(resultString: string) {
-        this.scanner.scanStop()
+        this.scanner.scanStop();
         this.dataTransferService.authenticate(resultString, 'parent').subscribe(
             (response) => {
                 // this.scanner.scanStop();
-                this.authServ.setToken(response.data.token)
+                this.authServ.setToken(response.data.token);
                 this.router.navigate(['/bambino']);
             },
             (error) => {
@@ -45,5 +45,8 @@ export class GenitorePage {
             }
         );
     }
-}
 
+    ngOnDestroy() {
+        this.scanner.scanStop();
+    }
+}

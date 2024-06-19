@@ -8,6 +8,7 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
+    @if (loaded){
     <div id="head">
         <!-- Pedibus logo -->
         <svg
@@ -123,7 +124,7 @@
     </div>
 
     <div id="accordion-container">
-        @for (fermata of fermate; track $index) {
+        @for (stop of stops; track stop) {
         <div class="list">
             <ion-accordion-group>
                 <div class="container-linea-percorso">
@@ -152,17 +153,24 @@
                 <ion-accordion>
                     <ion-item slot="header" color="none">
                         <ion-label>
-                            <p>fermata {{ fermata.fermata }}</p>
+                            <p>fermata {{ stop.indirizzo }}</p>
                         </ion-label>
                     </ion-item>
-                    @for (studente of fermata.studenti; track $index) {
+
+                    <!-- @for (nStudenti of nr_children; track $index) { -->
                     <div slot="content">
-                        <p>nomi {{ studente }}</p>
+                        <p>Numero bambini per questa fermata:  {{ stop.nr_children }}</p>
                     </div>
-                    }
+                    <!-- } -->
+
                 </ion-accordion>
             </ion-accordion-group>
         </div>
         }
     </div>
+} @else {
+    <div id="spinner">
+        <ion-spinner name="dots"></ion-spinner>
+    </div>
+}
 </ion-content>

@@ -39,12 +39,24 @@
 @import "~leaflet/dist/leaflet.css";
 * {
     --background: rgb(98, 101, 171);
-        --ion-color-base: var(--ion-color-primary, transparent) !important;
+    --ion-color-base: var(--ion-color-primary, transparent) !important;
 }
 
-:root.md{
+:root.md {
     --ion-color-violet: rgba(98, 101, 171, 1);
     --ion-background-color: none !important;
     --ion-color-primary: white !important;
 }
 
+#spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: none !important;
+    height: 90vh !important;
+    ion-spinner {
+        color: rgba(98, 101, 171, 1);
+        width: 100px;
+        height: 100px;
+    }
+}

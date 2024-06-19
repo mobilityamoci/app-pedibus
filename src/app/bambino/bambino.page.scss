@@ -6,18 +6,6 @@
     font-family: "Inter", sans-serif;
 }
 
-#spinner {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: none !important;
-    height: 90vh !important;
-    ion-spinner {
-        --color: rgba(98, 101, 171, 1);
-        width: 100px;
-        height: 100px;
-    }
-}
 h5 {
     font-weight: 500;
     font-size: 15px;

@@ -17,4 +17,12 @@ export class AuthService {
     public removeToken() {
         localStorage.removeItem('token');
     }
+
+    public getId(){
+        return localStorage.getItem('idFermate')
+    }
+
+    public setId(id: string){
+        localStorage.setItem('idFermate', id)
+    }
 }

@@ -8,7 +8,6 @@ import { Observable } from 'rxjs';
 export class DataTransferService {
     private data: any;
     private apiUrl = 'http://127.0.0.1:8000/api';
-    private token!: string;
     constructor(private http: HttpClient) {}
 
     setData(data: any) {
@@ -22,6 +21,8 @@ export class DataTransferService {
     clearData() {
         this.data = null;
     }
+
+
 
     authenticate(uuid: string, type: string) {
         return this.http.post<any>(`${this.apiUrl}/authenticate`, {
@@ -52,7 +53,7 @@ export class DataTransferService {
         });
 
         const url = `${this.apiUrl}/absence-days`;
-        
+
         return this.http.post<any>(url, data, { headers });
     }
 
@@ -82,6 +83,11 @@ export class DataTransferService {
     // }
 
     getFermata(id: string): Observable<any> {
-        return this.http.get<any>(`${this.apiUrl}/accompagnatore/${id}`);
+        const token = localStorage.getItem('token');
+        const headers = new HttpHeaders({
+            Authorization: `Bearer ${token}`,
+        });
+        const url = `${this.apiUrl}/get-fermate/${id}`
+        return this.http.get<any>(url, {headers});
     }
 }
