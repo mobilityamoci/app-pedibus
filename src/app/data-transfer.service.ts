@@ -69,6 +69,17 @@ export class DataTransferService {
         return this.http.get<any>(url, { headers });
     }
 
+    getFullPath(idPercorso: string): Observable<any> {
+        const token = localStorage.getItem('token');
+        const headers = new HttpHeaders({
+            Authorization: `Bearer ${token}`,
+        });
+        const url = `${this.apiUrl}/get-percorso/${idPercorso}`;
+        console.log(url);
+
+        return this.http.get<any>(url, { headers });
+    }
+
     // checkDateInDatabase(date: string): Observable<boolean> {
     //     const token = localStorage.getItem('token');
     //     const headers = new HttpHeaders({

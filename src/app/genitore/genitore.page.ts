@@ -34,16 +34,18 @@ export class GenitorePage implements OnDestroy {
 
     onCodeResult(resultString: string) {
         this.scanner.scanStop();
-        this.dataTransferService.authenticate(resultString, 'parent').subscribe(
-            (response) => {
-                // this.scanner.scanStop();
-                this.authServ.setToken(response.data.token);
-                this.router.navigate(['/bambino']);
-            },
-            (error) => {
-                console.error('Error fetching student data', error);
-            }
-        );
+        this.dataTransferService
+            .authenticate(resultString, 'parent')
+            .subscribe({
+                next: (response) => {
+                    // this.scanner.scanStop();
+                    this.authServ.setToken(response.data.token);
+                    this.router.navigate(['/bambino']);
+                },
+                error: (error) => {
+                    console.error('Error fetching student data', error);
+                },
+            });
     }
 
     ngOnDestroy() {

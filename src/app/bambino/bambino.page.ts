@@ -23,8 +23,8 @@ export class BambinoPage {
     @ViewChild(IonDatetime) datetime!: IonDatetime;
 
     loadChild() {
-        this.dataTransferService.getStudente().subscribe(
-            (response) => {
+        this.dataTransferService.getStudente().subscribe({
+                next: (response) => {
                 const studentData: Studente = response.data;
 
                 this.qrData.scuola = studentData.scuola;
@@ -49,10 +49,10 @@ export class BambinoPage {
                         }, 1000);
                     });
             },
-            (error) => {
+            error: (error) => {
                 console.error('Error fetching student data', error);
             }
-        );
+    });
     }
 
     ionViewDidEnter() {

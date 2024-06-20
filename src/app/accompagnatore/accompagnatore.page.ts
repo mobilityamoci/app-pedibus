@@ -9,15 +9,15 @@ import { AuthService } from '../authService';
     styleUrls: ['./accompagnatore.page.scss'],
 })
 export class AccompagnatorePage implements OnDestroy {
-stopScan() {
-    this.scanner.scanStop()
-}
+    stopScan() {
+        this.scanner.scanStop();
+    }
     qrData?: string;
     data: any = {};
     constructor(
         private dataTransferService: DataTransferService,
         private router: Router,
-        private authServ: AuthService, private authSrv: AuthService
+        private authServ: AuthService,
     ) {}
     @ViewChild(ZXingScannerComponent) scanner!: ZXingScannerComponent;
 
@@ -26,20 +26,20 @@ stopScan() {
     }
     onCodeResult(resultString: string) {
         this.scanner.scanStop();
-        this.authServ.setId(resultString)
+        this.authServ.setId(resultString);
         this.dataTransferService
             .authenticate(resultString, 'guardian')
-            .subscribe(
-                (response) => {
+            .subscribe({
+                next: (response) => {
                     this.authServ.setToken(response.data.token);
                     console.log(response.data.token);
-                    
+
                     this.router.navigate(['/fermate']);
                 },
-                (error) => {
+                error: (error) => {
                     console.error('Error fetching data', error);
-                }
-            );
+                },
+            });
     }
 
     ngOnDestroy() {

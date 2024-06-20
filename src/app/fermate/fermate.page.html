@@ -153,24 +153,49 @@
                 <ion-accordion>
                     <ion-item slot="header" color="none">
                         <ion-label>
-                            <p>fermata {{ stop.indirizzo }}</p>
+                            <p class="ion-text-capitalize">
+                                <span class="orario-fermata"
+                                    >{{ stop.orario }}</span
+                                >
+                                {{ stop.indirizzo }}
+                            </p>
                         </ion-label>
                     </ion-item>
 
-                    <!-- @for (nStudenti of nr_children; track $index) { -->
                     <div slot="content">
-                        <p>Numero bambini per questa fermata:  {{ stop.nr_children }}</p>
+                        <p class="numero-bambini">
+                            Numero bambini per questa fermata: {{
+                            stop.nr_children }}
+                        </p>
                     </div>
-                    <!-- } -->
-
                 </ion-accordion>
             </ion-accordion-group>
         </div>
         }
     </div>
-} @else {
+
+    <div id="map-start">
+        <h5>
+            Percorso @if (!isCoordinatesLoaded){
+            <div id="map-loading">
+                <ion-spinner name="dots">
+                </ion-spinner>
+                <p>Mappa in caricamento</p>
+            </div>
+            }
+        </h5>
+        <div class="map-container">
+            <div id="map"></div>
+        </div>
+    </div>
+
+    }@else {
     <div id="spinner">
         <ion-spinner name="dots"></ion-spinner>
     </div>
-}
+    } @if (errorMessage){
+    <div id="errorMessage">
+        <p>{{errorMessage}} <a href="/home">Torna alla home</a></p>
+    </div>
+    }
 </ion-content>
