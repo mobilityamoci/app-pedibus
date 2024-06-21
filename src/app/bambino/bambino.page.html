@@ -172,7 +172,14 @@
         </div>
 
         <div id="map-start">
-            <h5>Percorso</h5>
+            <h5>
+                Percorso @if (!isCoordinatesLoaded){
+                <div id="map-loading">
+                    <ion-spinner name="dots"> </ion-spinner>
+                    <p>Mappa in caricamento</p>
+                </div>
+                }
+            </h5>
             <div class="map-container">
                 <div id="map"></div>
                 <h3>La tua fermata</h3>

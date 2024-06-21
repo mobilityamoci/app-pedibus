@@ -5,4 +5,5 @@ export interface Guardian {
     orario: string;
     order: string;
     nr_children: string;
+    coordinates: []
 }

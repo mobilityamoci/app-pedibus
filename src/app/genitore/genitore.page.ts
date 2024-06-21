@@ -10,9 +10,10 @@ import { AuthService } from '../authService';
     templateUrl: './genitore.page.html',
     styleUrls: ['./genitore.page.scss'],
 })
-export class GenitorePage implements OnDestroy {
+export class GenitorePage implements OnInit,OnDestroy {
     qrResultString?: string;
-    // data: any = {};
+    isButtonDisabled: boolean = true;
+
 
     constructor(
         private router: Router,
@@ -23,6 +24,12 @@ export class GenitorePage implements OnDestroy {
     @ViewChild(ZXingScannerComponent) scanner!: ZXingScannerComponent;
     ionViewDidEnter() {
         this.scanner.scanStart();
+    }
+
+    ngOnInit(): void {
+        setTimeout(() => {
+            this.isButtonDisabled = false;
+        }, 2500);
     }
     stopScan() {
         this.scanner.scanStop();

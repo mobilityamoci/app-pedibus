@@ -8,21 +8,31 @@ import { AuthService } from '../authService';
     templateUrl: './accompagnatore.page.html',
     styleUrls: ['./accompagnatore.page.scss'],
 })
-export class AccompagnatorePage implements OnDestroy {
-    stopScan() {
-        this.scanner.scanStop();
-    }
+export class AccompagnatorePage implements OnInit, OnDestroy {
+
     qrData?: string;
     data: any = {};
+    isButtonDisabled: boolean = true;
+
     constructor(
         private dataTransferService: DataTransferService,
         private router: Router,
-        private authServ: AuthService,
+        private authServ: AuthService
     ) {}
     @ViewChild(ZXingScannerComponent) scanner!: ZXingScannerComponent;
 
+    ngOnInit(): void {
+        setTimeout(() => {
+            this.isButtonDisabled = false;
+        }, 2100);
+    }
+
     ionViewDidEnter() {
         this.scanner.scanStart();
+    }
+    
+    stopScan() {
+        this.scanner.scanStop();
     }
     onCodeResult(resultString: string) {
         this.scanner.scanStop();

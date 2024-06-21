@@ -14,6 +14,7 @@ export class BambinoPage {
     private map!: Leaflet.Map;
     qrData: Studente = {} as Studente;
     public loaded: boolean = false;
+    public isCoordinatesLoaded: boolean = false;
 
     constructor(
         private route: ActivatedRoute,
@@ -42,6 +43,7 @@ export class BambinoPage {
                         const coordinates = response.data.percorso;
                         console.log(coordinates);
                         this.loaded = true;
+                        this.isCoordinatesLoaded = true
                         console.log(this.loaded);
 
                         setTimeout(() => {
