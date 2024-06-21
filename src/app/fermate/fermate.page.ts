@@ -16,7 +16,7 @@ export class FermatePage implements OnInit {
         orario: string;
         indirizzo: string;
         nr_children: string;
-        coordinates: [];
+        coordinates: [number, number];
     }[] = [];
     studenti!: any[];
     public loaded: boolean = false;
@@ -31,10 +31,6 @@ export class FermatePage implements OnInit {
 
     ngOnInit(): void {
         this.loadGuardian();
-        setTimeout(() => {
-            this.leafStops()
-        }, 5000);
-        
         // this.dataTransferService
         //     .getFermata(this.qrData.id)
         //     .subscribe((data) => {
@@ -79,14 +75,14 @@ export class FermatePage implements OnInit {
 
                 guardianDataArray.forEach((guardianData) => {
                     const formattedTime = guardianData.orario.substring(0, 5);
-                    const coordinates: [] = guardianData.coordinates;
 
                     this.stops.push({
                         indirizzo: guardianData.indirizzo,
                         nr_children: guardianData.nr_children,
                         orario: formattedTime,
-                        coordinates: coordinates,
+                        coordinates: guardianData.coordinates,
                     });
+                    console.log(this.stops);
 
                     this.qrData.nome = guardianData.nome;
                     this.qrData.indirizzo = guardianData.indirizzo;
@@ -94,10 +90,8 @@ export class FermatePage implements OnInit {
                     this.qrData.orario = guardianData.orario;
                 });
 
-                console.log('Stops:', this.stops[1].coordinates);
+                console.log('Stops:', this.stops);
 
-                
-                // this.leafStops()
                 this.dataTransferService
                     .getFullPath(id)
                     .subscribe((response: any) => {
@@ -113,6 +107,10 @@ export class FermatePage implements OnInit {
 
                 this.loaded = true;
                 this.errorMessage = null;
+
+                setTimeout(() => {
+                    this.leafStops();
+                }, 10000);
             },
             error: (error) => {
                 this.loaded = true;
@@ -143,34 +141,31 @@ export class FermatePage implements OnInit {
             });
             line.addTo(this.map);
         }
+
+        let customPoint = Leaflet.icon({
+            iconUrl: '../../assets/image.png',
+        });
+
+        this.stops.forEach((stop) => {
+            if (stop.coordinates && stop.coordinates.length === 2) {
+                const [latitude, longitude] = stop.coordinates;
+
+                console.log(stop.coordinates, 'LEAFSTOPS LOOOOOOOOOOOOOOOOG');
+
+                Leaflet.marker([latitude, longitude], {
+                    icon: customPoint,
+                })
+                    .addTo(this.map)
+                    .bindPopup(stop.indirizzo);
+            } else {
+                console.error('Invalid coordinates for stop:', stop);
+            }
+        });
         const bounds = Leaflet.latLngBounds(
             percorso.map((point) => Leaflet.latLng(point[0], point[1]))
         );
         this.map.fitBounds(bounds);
     }
 
-    leafStops() {
-        let customPoint = Leaflet.icon({
-            iconUrl: '../../assets/image.png',
-        });
-    
-        // Проходим по каждому элементу в массиве this.stops
-        for (let j = 0; j < 1; j++) {
-            const stop = this.stops[j];
-    
-            // Извлекаем координаты для текущей остановки
-            const latitude = stop.coordinates[0];
-            
-            const longitude = stop.coordinates[1];
-            
-            console.log( latitude, 'LEAFSTOPS LOOOOOOOOOOOOOOOOG' );
-            // Создаем маркер с кастомным иконкой и координатами
-            Leaflet.marker([latitude, longitude], {
-                icon: customPoint,
-            })
-                .addTo(this.map)
-                .bindPopup(stop.indirizzo);
-        }
-    }
-    
+    leafStops() {}
 }
