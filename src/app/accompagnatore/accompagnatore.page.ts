@@ -9,7 +9,6 @@ import { AuthService } from '../authService';
     styleUrls: ['./accompagnatore.page.scss'],
 })
 export class AccompagnatorePage implements OnInit, OnDestroy {
-
     qrData?: string;
     data: any = {};
     isButtonDisabled: boolean = true;
@@ -24,16 +23,17 @@ export class AccompagnatorePage implements OnInit, OnDestroy {
     ngOnInit(): void {
         setTimeout(() => {
             this.isButtonDisabled = false;
-        }, 2100);
+        }, 2500);
     }
 
     ionViewDidEnter() {
         this.scanner.scanStart();
     }
-    
+
     stopScan() {
         this.scanner.scanStop();
     }
+
     onCodeResult(resultString: string) {
         this.scanner.scanStop();
         this.authServ.setId(resultString);

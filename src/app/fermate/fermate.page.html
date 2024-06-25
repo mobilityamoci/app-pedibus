@@ -150,7 +150,7 @@
                     </div>
                 </div>
 
-                <ion-accordion>
+                <ion-accordion class="accordion-expanded">
                     <ion-item slot="header" color="none">
                         <ion-label>
                             <p class="ion-text-capitalize">
@@ -178,8 +178,7 @@
         <h5>
             Percorso @if (!isCoordinatesLoaded){
             <div id="map-loading">
-                <ion-spinner name="dots">
-                </ion-spinner>
+                <ion-spinner name="dots"> </ion-spinner>
                 <p>Mappa in caricamento</p>
             </div>
             }
@@ -193,9 +192,13 @@
     <div id="spinner">
         <ion-spinner name="dots"></ion-spinner>
     </div>
-    } @if (errorMessage){
-    <div id="errorMessage">
-        <p>{{errorMessage}} <a href="/home">Torna alla home</a></p>
-    </div>
     }
+
+    <ion-alert
+        id="alert"
+        [isOpen]="isAlertOpen"
+        header="Errore"
+        message={{errorMessage}}
+        [buttons]="alertButtons"
+    ></ion-alert>
 </ion-content>

@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DataTransferService } from '../data-transfer.service';
 import * as Leaflet from 'leaflet';
-import { IonDatetime } from '@ionic/angular';
+import { IonDatetime, NavController } from '@ionic/angular';
 import { Studente } from '../interfaces/studente';
 
 @Component({
@@ -12,20 +12,32 @@ import { Studente } from '../interfaces/studente';
 })
 export class BambinoPage {
     private map!: Leaflet.Map;
-    qrData: Studente = {} as Studente;
+    public qrData: Studente = {} as Studente;
     public loaded: boolean = false;
     public isCoordinatesLoaded: boolean = false;
+    public alertButtons: any[];
+    public isAlertOpen = true;
+    public errorMessage: string | null = null;
 
     constructor(
-        private route: ActivatedRoute,
-        private dataTransferService: DataTransferService
-    ) {}
+        private dataTransferService: DataTransferService,
+        private navControl: NavController
+    ) {
+        this.alertButtons = [
+            {
+                text: 'Torna alla Home',
+                handler: () => {
+                    this.navControl.navigateRoot('/home');
+                },
+            },
+        ];
+    }
 
     @ViewChild(IonDatetime) datetime!: IonDatetime;
 
     loadChild() {
         this.dataTransferService.getStudente().subscribe({
-                next: (response) => {
+            next: (response) => {
                 const studentData: Studente = response.data;
 
                 this.qrData.scuola = studentData.scuola;
@@ -43,7 +55,7 @@ export class BambinoPage {
                         const coordinates = response.data.percorso;
                         console.log(coordinates);
                         this.loaded = true;
-                        this.isCoordinatesLoaded = true
+                        this.isCoordinatesLoaded = true;
                         console.log(this.loaded);
 
                         setTimeout(() => {
@@ -53,8 +65,10 @@ export class BambinoPage {
             },
             error: (error) => {
                 console.error('Error fetching student data', error);
-            }
-    });
+                this.errorMessage = error
+                this.isAlertOpen = true
+            },
+        });
     }
 
     ionViewDidEnter() {
@@ -146,7 +160,7 @@ export class BambinoPage {
             .subscribe((response) => {
                 this.highlightedDates(response);
                 console.log(response);
-                
+
                 this.reset();
             });
     }

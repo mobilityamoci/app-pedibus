@@ -14,7 +14,6 @@ export class GenitorePage implements OnInit,OnDestroy {
     qrResultString?: string;
     isButtonDisabled: boolean = true;
 
-
     constructor(
         private router: Router,
         private dataTransferService: DataTransferService,
@@ -45,7 +44,6 @@ export class GenitorePage implements OnInit,OnDestroy {
             .authenticate(resultString, 'parent')
             .subscribe({
                 next: (response) => {
-                    // this.scanner.scanStop();
                     this.authServ.setToken(response.data.token);
                     this.router.navigate(['/bambino']);
                 },

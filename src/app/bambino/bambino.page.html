@@ -193,4 +193,12 @@
         <ion-spinner name="dots"></ion-spinner>
     </div>
     }
+
+    <ion-alert
+        id="alert"
+        [isOpen]="isAlertOpen"
+        header="Errore"
+        message="{{errorMessage}}"
+        [buttons]="alertButtons"
+    ></ion-alert>
 </ion-content>

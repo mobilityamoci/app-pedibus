@@ -22,8 +22,6 @@ export class DataTransferService {
         this.data = null;
     }
 
-
-
     authenticate(uuid: string, type: string) {
         return this.http.post<any>(`${this.apiUrl}/authenticate`, {
             uuid: uuid,

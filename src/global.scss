@@ -35,7 +35,7 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import "@ionic/angular/css/palettes/dark.system.css";
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
 @import "~leaflet/dist/leaflet.css";
 * {
     --background: rgb(98, 101, 171);
@@ -58,5 +58,34 @@
         color: rgba(98, 101, 171, 1);
         width: 100px;
         height: 100px;
+    }
+}
+
+ion-alert {
+
+    .alert-head{
+        background: rgba(98, 101, 171, 1);
+        border: none;
+        padding: 1rem !important;
+    }
+
+    .alert-message{
+        background: white;
+        text-transform: uppercase;
+        color: red;
+        padding: 1rem 1rem !important;
+    }
+
+    .alert-button-group {
+        background: white;
+    }
+
+    .alert-button{
+        background: rgba(98, 101, 171, 1) !important;
+    }
+
+    .alert-wrapper {
+        border: 1px solid rgba(98, 101, 171, 1);
+        color: red;
     }
 }

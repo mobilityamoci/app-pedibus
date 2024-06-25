@@ -4,7 +4,7 @@ import * as Leaflet from 'leaflet';
 import { Guardian } from '../interfaces/Guardian';
 import { AuthService } from '../authService';
 import { Router } from '@angular/router';
-import { TitleCasePipe } from '@angular/common';
+import { NavController } from '@ionic/angular';
 @Component({
     selector: 'app-fermate',
     templateUrl: './fermate.page.html',
@@ -18,16 +18,28 @@ export class FermatePage implements OnInit {
         nr_children: string;
         coordinates: [number, number];
     }[] = [];
-    studenti!: any[];
     public loaded: boolean = false;
     public isCoordinatesLoaded: boolean = false;
+    public isAlertOpen = false;
+    public alertButtons: any[];
+
     errorMessage: string | null = null;
     private map!: Leaflet.Map;
     constructor(
         private router: Router,
         private dataTransferService: DataTransferService,
-        private authSrv: AuthService
-    ) {}
+        private authSrv: AuthService,
+        private navControl: NavController
+    ) {
+        this.alertButtons = [
+            {
+                text: 'Torna alla Home',
+                handler: () => {
+                    this.navControl.navigateRoot('/home');
+                },
+            },
+        ];
+    }
 
     ngOnInit(): void {
         this.loadGuardian();
@@ -46,9 +58,6 @@ export class FermatePage implements OnInit {
 
         if (!id) {
             this.loaded = true;
-            console.error(
-                'ID non presente, si prega di scansionare il codice QR di nuovo'
-            );
             this.errorMessage =
                 'ID non presente, si prega di scansionare il codice QR di nuovo';
             return;
@@ -64,9 +73,6 @@ export class FermatePage implements OnInit {
                         'Errore durante reccupero dei dati, riprovare.';
                 }
                 const guardianDataArray: Guardian[] = response.data;
-
-                console.log(guardianDataArray, '<<<<<<<<<<<<<DATA>>>>>>>>>>>>');
-
                 this.stops = [];
 
                 if (!this.qrData) {
@@ -107,20 +113,12 @@ export class FermatePage implements OnInit {
 
                 this.loaded = true;
                 this.errorMessage = null;
-
-                setTimeout(() => {
-                    this.leafStops();
-                }, 10000);
             },
             error: (error) => {
                 this.loaded = true;
-                console.error(
-                    error,
-                    'Tempo per richiesta finito',
-                    error.message
-                );
-                this.errorMessage =
-                    'Errore durante reccupero dei dati, verificare la connessione ad internet e riprovare.';
+                console.error(error);
+                this.errorMessage = 'Verificare la connessione e riprovare.';
+                this.isAlertOpen = true;
             },
         });
     }
@@ -148,9 +146,8 @@ export class FermatePage implements OnInit {
 
         this.stops.forEach((stop) => {
             if (stop.coordinates && stop.coordinates.length === 2) {
+                this.isCoordinatesLoaded = true;
                 const [latitude, longitude] = stop.coordinates;
-
-                console.log(stop.coordinates, 'LEAFSTOPS LOOOOOOOOOOOOOOOOG');
 
                 Leaflet.marker([latitude, longitude], {
                     icon: customPoint,
@@ -159,6 +156,8 @@ export class FermatePage implements OnInit {
                     .bindPopup(stop.indirizzo);
             } else {
                 console.error('Invalid coordinates for stop:', stop);
+                this.errorMessage = 'Errore nel caricamento delle fermate.';
+                this.isAlertOpen = true;
             }
         });
         const bounds = Leaflet.latLngBounds(
@@ -166,6 +165,4 @@ export class FermatePage implements OnInit {
         );
         this.map.fitBounds(bounds);
     }
-
-    leafStops() {}
 }
