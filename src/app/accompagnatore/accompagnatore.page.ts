@@ -3,6 +3,7 @@ import { DataTransferService } from '../data-transfer.service';
 import { Router } from '@angular/router';
 import { ZXingScannerComponent } from '@zxing/ngx-scanner';
 import { AuthService } from '../authService';
+import { NavController } from '@ionic/angular';
 @Component({
     selector: 'app-accompagnatore',
     templateUrl: './accompagnatore.page.html',
@@ -12,18 +13,31 @@ export class AccompagnatorePage implements OnInit, OnDestroy {
     qrData?: string;
     data: any = {};
     isButtonDisabled: boolean = true;
+    public isAlertOpen = false;
+    public alertButtons: any[];
+    errorMessage: string | null = null;
+
 
     constructor(
         private dataTransferService: DataTransferService,
         private router: Router,
-        private authServ: AuthService
-    ) {}
+        private authServ: AuthService,
+        private navControl: NavController
+    ) {
+        this.alertButtons = [
+            {
+                text: 'Riprova',
+                handler: () => {
+                    this.scanner.scanStart()
+                },
+            },
+        ];}
     @ViewChild(ZXingScannerComponent) scanner!: ZXingScannerComponent;
 
     ngOnInit(): void {
         setTimeout(() => {
             this.isButtonDisabled = false;
-        }, 2500);
+        }, 4000);
     }
 
     ionViewDidEnter() {
@@ -48,6 +62,8 @@ export class AccompagnatorePage implements OnInit, OnDestroy {
                 },
                 error: (error) => {
                     console.error('Error fetching data', error);
+                    this.errorMessage = 'QR code sbagliato'
+                    this.isAlertOpen = true
                 },
             });
     }

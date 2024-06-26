@@ -4,6 +4,9 @@
             <ion-back-button defaultHref="/genitore"></ion-back-button>
         </ion-buttons>
         <ion-title> Bambino Page </ion-title>
+        <ion-button id="other-child-btn" (click)="changeChild()" slot="end" fill="clear" shape="round">
+            Hai altri figli?
+        </ion-button>
     </ion-toolbar>
 </ion-header>
 
@@ -148,6 +151,9 @@
 
             <div id="child-info">
                 <p>{{ qrData.scuola }}</p>
+                <p>Classe {{ qrData.classe }}</p>
+                <p>{{ qrData.fermata }}</p>
+
             </div>
         </div>
         <div id="calendar">

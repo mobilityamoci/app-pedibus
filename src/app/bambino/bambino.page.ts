@@ -1,27 +1,31 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { DataTransferService } from '../data-transfer.service';
 import * as Leaflet from 'leaflet';
 import { IonDatetime, NavController } from '@ionic/angular';
 import { Studente } from '../interfaces/studente';
+import { AuthService } from '../authService';
 
 @Component({
     selector: 'app-bambino',
     templateUrl: './bambino.page.html',
     styleUrls: ['./bambino.page.scss'],
 })
-export class BambinoPage {
+export class BambinoPage implements OnDestroy {
+
     private map!: Leaflet.Map;
     public qrData: Studente = {} as Studente;
     public loaded: boolean = false;
     public isCoordinatesLoaded: boolean = false;
     public alertButtons: any[];
-    public isAlertOpen = true;
+    public isAlertOpen = false;
     public errorMessage: string | null = null;
 
     constructor(
+        private route: Router,
         private dataTransferService: DataTransferService,
-        private navControl: NavController
+        private navControl: NavController,
+        private authSrv: AuthService
     ) {
         this.alertButtons = [
             {
@@ -39,10 +43,11 @@ export class BambinoPage {
         this.dataTransferService.getStudente().subscribe({
             next: (response) => {
                 const studentData: Studente = response.data;
+                const formattedTime = studentData.orario.substring(0, 5);
 
                 this.qrData.scuola = studentData.scuola;
                 this.qrData.classe = studentData.classe;
-                this.qrData.orario = studentData.orario;
+                this.qrData.orario = formattedTime;
                 this.qrData.fermata = studentData.fermata;
                 this.qrData.percorso_id = studentData.percorso_id;
                 this.qrData.absenceDays = studentData.absenceDays;
@@ -70,6 +75,11 @@ export class BambinoPage {
             },
         });
     }
+
+    changeChild() {
+        this.authSrv.removeToken()
+        this.route.navigate(['/genitore'])
+        }
 
     ionViewDidEnter() {
         this.loadChild();
@@ -213,4 +223,10 @@ export class BambinoPage {
         const day = date.getDate().toString().padStart(2, '0');
         return `${year}-${month}-${day}`;
     }
+
+    ngOnDestroy(){
+        this.authSrv.removeId()
+        this.authSrv.removeToken()
+    }
+
 }

@@ -1,7 +1,11 @@
 <ion-header class="ion-no-border">
     <ion-toolbar>
         <ion-buttons slot="start">
-            <ion-back-button (click)="stopScan()" [disabled]="isButtonDisabled" defaultHref="/home"></ion-back-button>
+            <ion-back-button
+                (click)="stopScan()"
+                [disabled]="isButtonDisabled"
+                defaultHref="/home"
+            ></ion-back-button>
         </ion-buttons>
         <ion-title> Accompagnatore </ion-title>
     </ion-toolbar>
@@ -53,4 +57,12 @@
     <div id="code-scanner">
         <zxing-scanner (scanSuccess)="onCodeResult($event)"></zxing-scanner>
     </div>
+
+    <ion-alert
+        id="alert"
+        [isOpen]="isAlertOpen"
+        header="Errore"
+        message="{{errorMessage}}"
+        [buttons]="alertButtons"
+    ></ion-alert>
 </ion-content>

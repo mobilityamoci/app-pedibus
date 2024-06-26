@@ -25,4 +25,8 @@ export class AuthService {
     public setId(id: string){
         localStorage.setItem('idFermate', id)
     }
+
+    public removeId(){
+        localStorage.removeItem('idFermate')
+    }
 }

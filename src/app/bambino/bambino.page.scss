@@ -12,6 +12,12 @@ h5 {
     margin-bottom: 0.5rem;
 }
 
+#other-child-btn{
+    --color: rgba(98, 101, 171, 1);
+    font-size: 12px;
+    text-transform: initial;
+}
+
 ion-back-button,
 ion-title {
     color: rgba(98, 101, 171, 1);

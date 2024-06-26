@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DataTransferService } from '../data-transfer.service';
 import * as Leaflet from 'leaflet';
 import { Guardian } from '../interfaces/Guardian';
@@ -10,7 +10,7 @@ import { NavController } from '@ionic/angular';
     templateUrl: './fermate.page.html',
     styleUrls: ['./fermate.page.scss'],
 })
-export class FermatePage implements OnInit {
+export class FermatePage implements OnInit, OnDestroy {
     qrData: any;
     stops: {
         orario: string;
@@ -26,7 +26,6 @@ export class FermatePage implements OnInit {
     errorMessage: string | null = null;
     private map!: Leaflet.Map;
     constructor(
-        private router: Router,
         private dataTransferService: DataTransferService,
         private authSrv: AuthService,
         private navControl: NavController
@@ -62,8 +61,6 @@ export class FermatePage implements OnInit {
                 'ID non presente, si prega di scansionare il codice QR di nuovo';
             return;
         }
-
-        console.log(id + '<<<<<<<<<<<id');
 
         this.dataTransferService.getFermata(id).subscribe({
             next: (response) => {
@@ -117,7 +114,7 @@ export class FermatePage implements OnInit {
             error: (error) => {
                 this.loaded = true;
                 console.error(error);
-                this.errorMessage = 'Verificare la connessione e riprovare.';
+                this.errorMessage = 'Verificare la connessione e riprovare. ' + error;
                 this.isAlertOpen = true;
             },
         });
@@ -141,7 +138,7 @@ export class FermatePage implements OnInit {
         }
 
         let customPoint = Leaflet.icon({
-            iconUrl: '../../assets/image.png',
+            iconUrl: '../../assets/location-dot-solid.svg',
         });
 
         this.stops.forEach((stop) => {
@@ -164,5 +161,10 @@ export class FermatePage implements OnInit {
             percorso.map((point) => Leaflet.latLng(point[0], point[1]))
         );
         this.map.fitBounds(bounds);
+    }
+
+    ngOnDestroy(){
+        this.authSrv.removeId()
+        this.authSrv.removeToken()
     }
 }
