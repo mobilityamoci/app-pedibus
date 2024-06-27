@@ -12,7 +12,6 @@ import { AuthService } from '../authService';
     styleUrls: ['./bambino.page.scss'],
 })
 export class BambinoPage implements OnDestroy {
-
     private map!: Leaflet.Map;
     public qrData: Studente = {} as Studente;
     public loaded: boolean = false;
@@ -20,7 +19,13 @@ export class BambinoPage implements OnDestroy {
     public alertButtons: any[];
     public isAlertOpen = false;
     public errorMessage: string | null = null;
+    public isProcessing: boolean = false;
 
+    public updateDateMessage?: string;
+    public isPopupShown: boolean = false;
+    private progressInterval: number | undefined;
+
+    public progress = 0;
     constructor(
         private route: Router,
         private dataTransferService: DataTransferService,
@@ -29,7 +34,7 @@ export class BambinoPage implements OnDestroy {
     ) {
         this.alertButtons = [
             {
-                text: 'Torna alla Home',
+                text: 'Indietro',
                 handler: () => {
                     this.navControl.navigateRoot('/home');
                 },
@@ -70,16 +75,17 @@ export class BambinoPage implements OnDestroy {
             },
             error: (error) => {
                 console.error('Error fetching student data', error);
-                this.errorMessage = error
-                this.isAlertOpen = true
+                this.errorMessage =
+                    'Errore nel recupero dei dati, tornare indietro e riprovare';
+                this.isAlertOpen = true;
             },
         });
     }
 
     changeChild() {
-        this.authSrv.removeToken()
-        this.route.navigate(['/genitore'])
-        }
+        this.authSrv.removeToken();
+        this.route.navigate(['/genitore']);
+    }
 
     ionViewDidEnter() {
         this.loadChild();
@@ -155,24 +161,46 @@ export class BambinoPage implements OnDestroy {
         };
     };
 
-    onDateChange(event: any) {
+    onDateChange(event: any) {    
+        this.isProcessing = true;
+    
         const selectedDate = this.formatDate(new Date(event.detail.value));
         const index = this.qrData.absenceDays?.indexOf(selectedDate);
-
+    
         if (index === -1) {
             this.qrData.absenceDays?.push(selectedDate);
         } else {
             this.qrData.absenceDays?.splice(index, 1);
         }
-
-        this.dataTransferService
-            .updateStudente({ days: this.qrData.absenceDays })
-            .subscribe((response) => {
-                this.highlightedDates(response);
-                console.log(response);
-
-                this.reset();
-            });
+    
+        this.isPopupShown = true;
+        this.progress = 0;
+    
+        if (this.progressInterval !== undefined) {
+            clearInterval(this.progressInterval);
+        }
+    
+        this.progressInterval = window.setInterval(() => {
+            this.progress += 0.015;
+            if (this.progress >= 1) {
+                clearInterval(this.progressInterval);
+                this.progressInterval = undefined;            }
+        }, 15);
+    
+        setTimeout(() => {
+            this.isPopupShown = false;
+        }, 1500);
+    
+        this.dataTransferService.updateStudente({ days: this.qrData.absenceDays }).subscribe((response) => {
+            this.highlightedDates(response);
+            console.log(response);
+            this.updateDateMessage = response.message;
+            this.reset();
+        });
+    
+        setTimeout(() => {
+            this.isProcessing = false; 
+        }, 2500);
     }
 
     // updateHighlightedDates() {
@@ -224,9 +252,8 @@ export class BambinoPage implements OnDestroy {
         return `${year}-${month}-${day}`;
     }
 
-    ngOnDestroy(){
-        this.authSrv.removeId()
-        this.authSrv.removeToken()
+    ngOnDestroy() {
+        this.authSrv.removeId();
+        this.authSrv.removeToken();
     }
-
 }

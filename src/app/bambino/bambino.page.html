@@ -4,7 +4,13 @@
             <ion-back-button defaultHref="/genitore"></ion-back-button>
         </ion-buttons>
         <ion-title> Bambino Page </ion-title>
-        <ion-button id="other-child-btn" (click)="changeChild()" slot="end" fill="clear" shape="round">
+        <ion-button
+            id="other-child-btn"
+            (click)="changeChild()"
+            slot="end"
+            fill="clear"
+            shape="round"
+        >
             Hai altri figli?
         </ion-button>
     </ion-toolbar>
@@ -153,13 +159,62 @@
                 <p>{{ qrData.scuola }}</p>
                 <p>Classe {{ qrData.classe }}</p>
                 <p>{{ qrData.fermata }}</p>
-
             </div>
         </div>
         <div id="calendar">
             <h5>Disponibilità</h5>
             <div>
                 <!--TODO da mettere poi qui sotto =>  min="2024-08-31T00:00:00" -->
+                <div id="mini-guide">
+                    <div>
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            height="10"
+                            width="10"
+                            viewBox="0 0 512 512"
+                        >
+                            <!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                            <path
+                                fill="#7ae1a9"
+                                d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512z"
+                            />
+                        </svg>
+                        <p>- Giorni in cui bambino è presente</p>
+                    </div>
+
+                    <div>
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            height="10"
+                            width="10"
+                            viewBox="0 0 512 512"
+                        >
+                            <!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                            <path
+                                fill="#e17a7a"
+                                d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512z"
+                            />
+                        </svg>
+                        <p>- Giorni in cui bambino è assente</p>
+                    </div>
+
+                    <div>
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            height="10"
+                            width="10"
+                            viewBox="0 0 512 512"
+                        >
+                            <!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                            <path
+                                fill="#a9a9a9"
+                                d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512z"
+                            />
+                        </svg>
+                        <p>- Giorni disabilitati</p>
+                    </div>
+                </div>
+
                 <ion-datetime
                     locale="it-IT"
                     appApplyStyles
@@ -171,6 +226,7 @@
                     [isDateEnabled]="isWeekday"
                     (ionChange)="onDateChange($event)"
                     size="cover"
+                    [disabled]="isProcessing"
                 >
                     ></ion-datetime
                 >
@@ -207,4 +263,11 @@
         message="{{errorMessage}}"
         [buttons]="alertButtons"
     ></ion-alert>
+
+    @if (isPopupShown){
+    <div id="popup-update-message">
+        <p>{{ updateDateMessage }}</p>
+        <ion-progress-bar [value]="progress"></ion-progress-bar>
+    </div>
+    }
 </ion-content>

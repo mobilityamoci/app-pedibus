@@ -62,14 +62,13 @@
 }
 
 ion-alert {
-
-    .alert-head{
+    .alert-head {
         background: rgba(98, 101, 171, 1);
         border: none;
         padding: 1rem !important;
     }
 
-    .alert-message{
+    .alert-message {
         background: white;
         text-transform: uppercase;
         color: red;
@@ -80,7 +79,7 @@ ion-alert {
         background: white;
     }
 
-    .alert-button{
+    .alert-button {
         background: rgba(98, 101, 171, 1) !important;
     }
 
@@ -89,3 +88,4 @@ ion-alert {
         color: red;
     }
 }
+

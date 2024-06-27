@@ -12,7 +12,20 @@ h5 {
     margin-bottom: 0.5rem;
 }
 
-#other-child-btn{
+#mini-guide {
+    div {
+        display: flex;
+        margin: 0;
+        align-items: center;
+
+        p {
+            margin: 0.1rem;
+            margin-left: 0.4rem;
+        }
+    }
+}
+
+#other-child-btn {
     --color: rgba(98, 101, 171, 1);
     font-size: 12px;
     text-transform: initial;
@@ -72,6 +85,7 @@ ion-content {
 
         #calendar {
             ion-datetime {
+                margin-top: 0.7rem;
                 margin-bottom: 2rem;
                 font-weight: bold;
                 color: black;
@@ -128,6 +142,26 @@ ion-content {
             border-radius: 15px;
             // width: 100vw;
         }
+    }
+}
+
+#popup-update-message {
+    position: fixed;
+    top: 90px;
+    right: 0px;
+    background: rgba(239, 245, 247, 1);
+    padding: .5rem;
+    border-radius: 10px;
+
+    p {
+        margin: 0;
+        color: rgba(98, 101, 171, 1);
+    }
+
+    ion-progress-bar {
+        margin-top: 0.5rem;
+        border-radius: 4px;
+        --progress-background: rgba(98, 101, 171, 1);
     }
 }
 
