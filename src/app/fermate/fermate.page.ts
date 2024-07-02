@@ -21,7 +21,6 @@ export class FermatePage implements OnInit, OnDestroy {
     public loaded: boolean = false;
     public isCoordinatesLoaded: boolean = false;
     public isAlertOpen = false;
-    public alertButtons: any[];
 
     errorMessage: string | null = null;
     private map!: Leaflet.Map;
@@ -29,16 +28,7 @@ export class FermatePage implements OnInit, OnDestroy {
         private dataTransferService: DataTransferService,
         private authSrv: AuthService,
         private navControl: NavController
-    ) {
-        this.alertButtons = [
-            {
-                text: 'Torna alla Home',
-                handler: () => {
-                    this.navControl.navigateRoot('/home');
-                },
-            },
-        ];
-    }
+    ) {}
 
     ngOnInit(): void {
         this.loadGuardian();
@@ -50,6 +40,19 @@ export class FermatePage implements OnInit, OnDestroy {
         //         this.qrData = data;
 
         //     });
+    }
+
+    presentCustomAlert(errorMessage: string) {
+        this.errorMessage = errorMessage;
+        this.isAlertOpen = true;
+    }
+
+    onModalDismiss() {
+        this.isAlertOpen = false;
+    }
+
+    dismissAlert() {
+        this.isAlertOpen = false;
     }
 
     loadGuardian() {
@@ -114,7 +117,8 @@ export class FermatePage implements OnInit, OnDestroy {
             error: (error) => {
                 this.loaded = true;
                 console.error(error);
-                this.errorMessage = 'Verificare la connessione e riprovare. ' + error;
+                this.errorMessage =
+                    'Verificare la connessione e riprovare. ' + error;
                 this.isAlertOpen = true;
             },
         });
@@ -163,8 +167,8 @@ export class FermatePage implements OnInit, OnDestroy {
         this.map.fitBounds(bounds);
     }
 
-    ngOnDestroy(){
-        this.authSrv.removeId()
-        this.authSrv.removeToken()
+    ngOnDestroy() {
+        this.authSrv.removeId();
+        this.authSrv.removeToken();
     }
 }

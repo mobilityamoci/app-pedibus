@@ -14,24 +14,13 @@ export class GenitorePage implements OnInit, OnDestroy {
     qrResultString?: string;
     isButtonDisabled: boolean = true;
     public isAlertOpen = false;
-    public alertButtons: any[];
     errorMessage: string | null = null;
 
     constructor(
         private router: Router,
         private dataTransferService: DataTransferService,
         private authServ: AuthService,
-        private navControl: NavController
-    ) {
-        this.alertButtons = [
-            {
-                text: 'Riprova',
-                handler: () => {
-                    this.scanner.scanStart()
-                },
-            },
-        ];
-    }
+    ) {}
 
     @ViewChild(ZXingScannerComponent) scanner!: ZXingScannerComponent;
     ionViewDidEnter() {
@@ -45,6 +34,20 @@ export class GenitorePage implements OnInit, OnDestroy {
     }
     stopScan() {
         this.scanner.scanStop();
+    }
+
+    presentCustomAlert(errorMessage: string) {
+        this.errorMessage = errorMessage;
+        this.isAlertOpen = true;
+    }
+
+    onModalDismiss() {
+        this.isAlertOpen = false;
+    }
+
+    dismissAlert() {
+        this.isAlertOpen = false;
+        this.scanner.scanStart();
     }
 
     onClick() {
@@ -61,9 +64,11 @@ export class GenitorePage implements OnInit, OnDestroy {
                     this.router.navigate(['/bambino']);
                 },
                 error: (error) => {
-                    console.error('Error fetching student data', error);
-                    this.errorMessage = 'QR code sbagliato'
-                    this.isAlertOpen = true
+                    console.error('Error fetching data', error);
+                    this.scanner.scanStop();
+                    this.presentCustomAlert(
+                        'QR code sbagliato, verificare il QR code e riprovare'
+                    );
                 },
             });
     }

@@ -1,7 +1,5 @@
 .container {
-
     margin-left: 3rem;
-
     display: flex;
     justify-content: start;
     flex-direction: column;
@@ -11,12 +9,12 @@
         display: flex;
         justify-content: start;
         flex-direction: column;
-        margin-bottom: 3rem;
+        margin-bottom: 2rem;
         margin-top: 2rem;
-
 
         h1 {
             margin: 0;
+            margin-right: 3rem;
             font-family: "M PLUS Rounded 1c", sans-serif;
             font-weight: 700;
             font-style: normal;
@@ -27,12 +25,14 @@
     }
 
     h3 {
-        font-size: 24px;
+        margin-right: 3rem;
+        margin-top: 0;
+        font-size: 20px;
         word-wrap: break-word;
     }
 
     p {
-
+        margin: 0;
         a {
             color: white;
             text-decoration: none;
@@ -43,15 +43,37 @@
 }
 
 #code-scanner {
+    position: relative;
     margin: 50px auto;
     margin-top: 30px;
-    background: black;
     width: 75vw;
     height: 30vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    ion-spinner {
+        position: absolute;
+        width: 80%;
+        height: 80%;
+        color: rgba(213, 235, 244, 1);
+        background: none;
+    }
 
     video {
         width: 100%;
         height: 100%;
-        object-fit: cover;
+        object-fit: contain;
     }
+}
+
+#piacenza {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    bottom: 3rem;
+    left: 50%;
+    right: 50%;
+    flex-direction: column;
 }

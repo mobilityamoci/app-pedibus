@@ -171,7 +171,7 @@
                 </ion-accordion>
             </ion-accordion-group>
         </div>
-        
+
         }
     </div>
 
@@ -195,11 +195,26 @@
     </div>
     }
 
-    <ion-alert
-        id="alert"
-        [isOpen]="isAlertOpen"
-        header="Errore"
-        message="{{errorMessage}}"
-        [buttons]="alertButtons"
-    ></ion-alert>
 </ion-content>
+
+<div class="custom-alert-card" *ngIf="isAlertOpen">
+    <ion-card>
+        <ion-card-header>
+            <ion-card-title>Errore</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+            <p>Errore: {{ errorMessage }}</p>
+            <img
+                src="../../assets/SvgjsG1008socket.svg"
+                alt="Error image"
+                class="error-image"
+            />
+            <ion-button
+                class="custom-button"
+                expand="full"
+                (click)="dismissAlert()"
+                >Riprova</ion-button
+            >
+        </ion-card-content>
+    </ion-card>
+</div>

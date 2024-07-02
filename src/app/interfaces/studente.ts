@@ -5,5 +5,6 @@ export interface Studente {
     fermata: string;
     orario: string;
     percorso_id: string;
+    fermata_coord: [number, number];
     absenceDays: string[];
 }

@@ -3,7 +3,7 @@ import { DataTransferService } from '../data-transfer.service';
 import { Router } from '@angular/router';
 import { ZXingScannerComponent } from '@zxing/ngx-scanner';
 import { AuthService } from '../authService';
-import { NavController } from '@ionic/angular';
+import { ModalController, NavController } from '@ionic/angular';
 @Component({
     selector: 'app-accompagnatore',
     templateUrl: './accompagnatore.page.html',
@@ -14,24 +14,14 @@ export class AccompagnatorePage implements OnInit, OnDestroy {
     data: any = {};
     isButtonDisabled: boolean = true;
     public isAlertOpen = false;
-    public alertButtons: any[];
     errorMessage: string | null = null;
 
-
+    public isLoading: boolean = false;
     constructor(
         private dataTransferService: DataTransferService,
         private router: Router,
-        private authServ: AuthService,
-        private navControl: NavController
-    ) {
-        this.alertButtons = [
-            {
-                text: 'Riprova',
-                handler: () => {
-                    this.scanner.scanStart()
-                },
-            },
-        ];}
+        private authServ: AuthService
+    ) {}
     @ViewChild(ZXingScannerComponent) scanner!: ZXingScannerComponent;
 
     ngOnInit(): void {
@@ -39,17 +29,34 @@ export class AccompagnatorePage implements OnInit, OnDestroy {
             this.isButtonDisabled = false;
         }, 4000);
     }
-
-    ionViewDidEnter() {
-        this.scanner.scanStart();
-    }
-
     stopScan() {
         this.scanner.scanStop();
     }
 
+    ionViewDidEnter() {
+        // this.scanner.scanStart();
+        this.presentCustomAlert(
+            'Errore nel recupero dei dati, tornare indietro e riprovare'
+        );
+    }
+
+    presentCustomAlert(errorMessage: string) {
+        this.errorMessage = errorMessage;
+        this.isAlertOpen = true;
+    }
+
+    onModalDismiss() {
+        this.isAlertOpen = false;
+    }
+
+    dismissAlert() {
+        this.isAlertOpen = false;
+        this.scanner.scanStart()
+    }
+
     onCodeResult(resultString: string) {
         this.scanner.scanStop();
+        this.isLoading = true;
         this.authServ.setId(resultString);
         this.dataTransferService
             .authenticate(resultString, 'guardian')
@@ -57,13 +64,15 @@ export class AccompagnatorePage implements OnInit, OnDestroy {
                 next: (response) => {
                     this.authServ.setToken(response.data.token);
                     console.log(response.data.token);
-
+                    this.isLoading = false;
                     this.router.navigate(['/fermate']);
                 },
                 error: (error) => {
                     console.error('Error fetching data', error);
-                    this.errorMessage = 'QR code sbagliato'
-                    this.isAlertOpen = true
+                    this.scanner.scanStop()
+                    this.presentCustomAlert(
+                        'QR code sbagliato, verificare il QR code e riprovare'
+                    );
                 },
             });
     }

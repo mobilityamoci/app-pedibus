@@ -11,7 +11,7 @@ import { AuthService } from '../authService';
     templateUrl: './bambino.page.html',
     styleUrls: ['./bambino.page.scss'],
 })
-export class BambinoPage implements OnDestroy {
+export class BambinoPage implements OnInit, OnDestroy {
     private map!: Leaflet.Map;
     public qrData: Studente = {} as Studente;
     public loaded: boolean = false;
@@ -21,7 +21,6 @@ export class BambinoPage implements OnDestroy {
     public errorMessage: string | null = null;
     public isProcessing: boolean = false;
 
-    public updateDateMessage?: string;
     public isPopupShown: boolean = false;
     private progressInterval: number | undefined;
 
@@ -41,6 +40,22 @@ export class BambinoPage implements OnDestroy {
             },
         ];
     }
+    ngOnInit(): void {
+        this.loadChild();
+    }
+
+    presentCustomAlert(errorMessage: string) {
+        this.errorMessage = errorMessage;
+        this.isAlertOpen = true;
+    }
+
+    onModalDismiss() {
+        this.isAlertOpen = false;
+    }
+
+    dismissAlert() {
+        this.isAlertOpen = false;
+    }
 
     @ViewChild(IonDatetime) datetime!: IonDatetime;
 
@@ -56,6 +71,7 @@ export class BambinoPage implements OnDestroy {
                 this.qrData.fermata = studentData.fermata;
                 this.qrData.percorso_id = studentData.percorso_id;
                 this.qrData.absenceDays = studentData.absenceDays;
+                this.qrData.fermata_coord = studentData.fermata_coord;
                 console.log('Percorso ID:', this.qrData.percorso_id);
                 console.log('Student Data:', studentData);
 
@@ -70,7 +86,7 @@ export class BambinoPage implements OnDestroy {
 
                         setTimeout(() => {
                             this.leafletMap(coordinates);
-                        }, 1000);
+                        }, 50);
                     });
             },
             error: (error) => {
@@ -87,9 +103,19 @@ export class BambinoPage implements OnDestroy {
         this.route.navigate(['/genitore']);
     }
 
-    ionViewDidEnter() {
-        this.loadChild();
-    }
+    // ionViewDidEnter() {
+    //     this.loadChild();
+    // this.isPopupShown = true
+    // console.log(this.isPopupShown);
+    // this.updateDateMessage = 'Caricamento '
+
+    // setTimeout(() => {
+    //     this.isPopupShown=false
+    //     console.log(this.isPopupShown, 'popup false?');
+    //     this.updateDateMessage = ''
+    // }, 5000);
+
+    // }
 
     leafletMap(percorso: [number, number][]) {
         this.map = Leaflet.map('map');
@@ -109,6 +135,17 @@ export class BambinoPage implements OnDestroy {
             });
             line.addTo(this.map);
         }
+
+        const [latitude, longitude] = this.qrData.fermata_coord;
+        let customPoint = Leaflet.icon({
+            iconUrl: '../../assets/location-dot-solid (3).svg',
+        });
+
+        Leaflet.marker([latitude, longitude], {
+            icon: customPoint,
+        })
+            .addTo(this.map)
+            .bindPopup('Questa è la tua fermata');
 
         const bounds = Leaflet.latLngBounds(
             percorso.map((point) => Leaflet.latLng(point[0], point[1]))
@@ -161,85 +198,50 @@ export class BambinoPage implements OnDestroy {
         };
     };
 
-    onDateChange(event: any) {    
+    onDateChange(event: any) {
+        if (this.isProcessing) return;
+
         this.isProcessing = true;
-    
+
         const selectedDate = this.formatDate(new Date(event.detail.value));
         const index = this.qrData.absenceDays?.indexOf(selectedDate);
-    
+
         if (index === -1) {
             this.qrData.absenceDays?.push(selectedDate);
         } else {
             this.qrData.absenceDays?.splice(index, 1);
         }
-    
+
         this.isPopupShown = true;
         this.progress = 0;
-    
+
         if (this.progressInterval !== undefined) {
             clearInterval(this.progressInterval);
         }
-    
+
         this.progressInterval = window.setInterval(() => {
             this.progress += 0.015;
             if (this.progress >= 1) {
                 clearInterval(this.progressInterval);
-                this.progressInterval = undefined;            }
+                this.progressInterval = undefined;
+            }
         }, 15);
-    
+
         setTimeout(() => {
             this.isPopupShown = false;
         }, 1500);
-    
-        this.dataTransferService.updateStudente({ days: this.qrData.absenceDays }).subscribe((response) => {
-            this.highlightedDates(response);
-            console.log(response);
-            this.updateDateMessage = response.message;
-            this.reset();
-        });
-    
+
+        this.dataTransferService
+            .updateStudente({ days: this.qrData.absenceDays })
+            .subscribe((response) => {
+                this.highlightedDates(response);
+                this.reset();
+            });
+
         setTimeout(() => {
-            this.isProcessing = false; 
+            this.isProcessing = false;
         }, 2500);
     }
-
-    // updateHighlightedDates() {
-    //     this.highlightedDates = (isoString: any) => {
-    //         const date = new Date(isoString);
-    //         const formattedDate = this.formatDate(date);
-    //         const isPresent = this.qrData.absenceDays || [];
-    //         const today = new Date();
-    //         const utcDay = date.getUTCDay();
-
-    //         date.setHours(0, 0, 0, 0);
-    //         today.setHours(0, 0, 0, 0);
-
-    //         console.log(isPresent);
-
-    //         if (isPresent.includes(formattedDate)) {
-    //             return {
-    //                 backgroundColor: 'rgba(225, 122, 122, 1)',
-    //             };
-    //         }
-
-    //         if (utcDay === 0 || utcDay === 6) {
-    //             return {
-    //                 textColor: 'black',
-    //                 backgroundColor: 'rgba(225, 122, 122, 1)',
-    //             };
-    //         }
-
-    //         if (date < today) {
-    //             return {
-    //                 backgroundColor: 'rgba(169, 169, 169, 1)',
-    //             };
-    //         }
-
-    //         return {
-    //             backgroundColor: 'rgba(122, 225, 138, 1)',
-    //         };
-    //     };
-    // }
 
     reset() {
         this.datetime.reset();
