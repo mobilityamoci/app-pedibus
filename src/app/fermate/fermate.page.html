@@ -7,7 +7,7 @@
     </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [ngClass]="{ 'modal-open': isAlertOpen }" [fullscreen]="true">
     @if (loaded){
     <div id="head">
         <!-- Pedibus logo -->
@@ -150,7 +150,7 @@
                     </div>
                 </div>
 
-                <ion-accordion class="accordion-expanded">
+                <ion-accordion>
                     <ion-item slot="header" color="none">
                         <ion-label>
                             <p class="ion-text-capitalize">
@@ -194,7 +194,6 @@
         <ion-spinner name="dots"></ion-spinner>
     </div>
     }
-
 </ion-content>
 
 <div class="custom-alert-card" *ngIf="isAlertOpen">

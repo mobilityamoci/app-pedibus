@@ -16,7 +16,6 @@ export class BambinoPage implements OnInit, OnDestroy {
     public qrData: Studente = {} as Studente;
     public loaded: boolean = false;
     public isCoordinatesLoaded: boolean = false;
-    public alertButtons: any[];
     public isAlertOpen = false;
     public errorMessage: string | null = null;
     public isProcessing: boolean = false;
@@ -28,18 +27,8 @@ export class BambinoPage implements OnInit, OnDestroy {
     constructor(
         private route: Router,
         private dataTransferService: DataTransferService,
-        private navControl: NavController,
         private authSrv: AuthService
-    ) {
-        this.alertButtons = [
-            {
-                text: 'Indietro',
-                handler: () => {
-                    this.navControl.navigateRoot('/home');
-                },
-            },
-        ];
-    }
+    ) {}
     ngOnInit(): void {
         this.loadChild();
     }
@@ -55,6 +44,7 @@ export class BambinoPage implements OnInit, OnDestroy {
 
     dismissAlert() {
         this.isAlertOpen = false;
+        this.route.navigate(['/home'])
     }
 
     @ViewChild(IonDatetime) datetime!: IonDatetime;
@@ -91,9 +81,9 @@ export class BambinoPage implements OnInit, OnDestroy {
             },
             error: (error) => {
                 console.error('Error fetching student data', error);
-                this.errorMessage =
-                    'Errore nel recupero dei dati, tornare indietro e riprovare';
-                this.isAlertOpen = true;
+                this.presentCustomAlert(
+                    'Errore nel recupero dei dati, tornare indietro e riprovare'
+                );
             },
         });
     }

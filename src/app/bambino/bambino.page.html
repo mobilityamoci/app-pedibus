@@ -16,7 +16,7 @@
     </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [ngClass]="{ 'modal-open': isAlertOpen }" [fullscreen]="true">
     @if (loaded) {
     <div id="head">
         <!-- Pedibus logo -->
@@ -164,7 +164,6 @@
         <div id="calendar">
             <h5>Disponibilità</h5>
             <div>
-                <!--TODO da mettere poi qui sotto =>  min="2024-08-31T00:00:00" -->
                 <div id="mini-guide">
                     <div>
                         <svg
@@ -214,7 +213,8 @@
                         <p>- Giorni disabilitati</p>
                     </div>
                 </div>
-
+                
+                <!--TODO da mettere poi qui sotto =>  min="2024-08-31T00:00:00" -->
                 <ion-datetime
                     locale="it-IT"
                     appApplyStyles
@@ -261,14 +261,6 @@
         <ion-spinner name="dots"></ion-spinner>
     </div>
     }
-
-    <ion-alert
-        id="alert"
-        [isOpen]="isAlertOpen"
-        header="Errore"
-        message="{{errorMessage}}"
-        [buttons]="alertButtons"
-    ></ion-alert>
 </ion-content>
 
 <div class="custom-alert-card" *ngIf="isAlertOpen">

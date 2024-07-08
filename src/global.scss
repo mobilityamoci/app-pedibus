@@ -121,7 +121,8 @@
 
 .modal-open {
     filter: blur(8px);
-    --background: rgba(100, 100, 100, 0.3);
+    --background: rgba(100, 100, 100, 0.3) !important;
+    background: rgba(100, 100, 100, 0.3);
 }
 
 .custom-alert-card {
@@ -161,6 +162,7 @@
             text-transform: capitalize;
         }
         ion-button.custom-button::part(native) {
+            background: rgba(98, 101, 171, 1);
             border-radius: 35px;
             padding: 1.2rem;
             margin-top: 2.5rem;

@@ -3,7 +3,6 @@ import { DataTransferService } from '../data-transfer.service';
 import { Router } from '@angular/router';
 import { ZXingScannerComponent } from '@zxing/ngx-scanner';
 import { AuthService } from '../authService';
-import { ModalController, NavController } from '@ionic/angular';
 @Component({
     selector: 'app-accompagnatore',
     templateUrl: './accompagnatore.page.html',
@@ -34,10 +33,7 @@ export class AccompagnatorePage implements OnInit, OnDestroy {
     }
 
     ionViewDidEnter() {
-        // this.scanner.scanStart();
-        this.presentCustomAlert(
-            'Errore nel recupero dei dati, tornare indietro e riprovare'
-        );
+        this.scanner.scanStart();
     }
 
     presentCustomAlert(errorMessage: string) {
@@ -51,7 +47,8 @@ export class AccompagnatorePage implements OnInit, OnDestroy {
 
     dismissAlert() {
         this.isAlertOpen = false;
-        this.scanner.scanStart()
+        this.isLoading = false;
+        this.scanner.scanStart();
     }
 
     onCodeResult(resultString: string) {
@@ -69,7 +66,7 @@ export class AccompagnatorePage implements OnInit, OnDestroy {
                 },
                 error: (error) => {
                     console.error('Error fetching data', error);
-                    this.scanner.scanStop()
+                    this.scanner.scanStop();
                     this.presentCustomAlert(
                         'QR code sbagliato, verificare il QR code e riprovare'
                     );

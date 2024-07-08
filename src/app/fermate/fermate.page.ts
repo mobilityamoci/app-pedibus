@@ -25,9 +25,9 @@ export class FermatePage implements OnInit, OnDestroy {
     errorMessage: string | null = null;
     private map!: Leaflet.Map;
     constructor(
+        private route: Router,
         private dataTransferService: DataTransferService,
-        private authSrv: AuthService,
-        private navControl: NavController
+        private authSrv: AuthService
     ) {}
 
     ngOnInit(): void {
@@ -53,6 +53,7 @@ export class FermatePage implements OnInit, OnDestroy {
 
     dismissAlert() {
         this.isAlertOpen = false;
+        this.route.navigate(['/home'])
     }
 
     loadGuardian() {
@@ -60,18 +61,16 @@ export class FermatePage implements OnInit, OnDestroy {
 
         if (!id) {
             this.loaded = true;
-            this.errorMessage =
-                'ID non presente, si prega di scansionare il codice QR di nuovo';
+            this.isCoordinatesLoaded = true
+            this.presentCustomAlert(
+                'ID non presente, si prega di scansionare il codice QR di nuovo'
+            );
+
             return;
         }
 
         this.dataTransferService.getFermata(id).subscribe({
             next: (response) => {
-                if (response.error) {
-                    this.loaded = true;
-                    this.errorMessage =
-                        'Errore durante reccupero dei dati, riprovare.';
-                }
                 const guardianDataArray: Guardian[] = response.data;
                 this.stops = [];
 
@@ -98,9 +97,8 @@ export class FermatePage implements OnInit, OnDestroy {
 
                 console.log('Stops:', this.stops);
 
-                this.dataTransferService
-                    .getFullPath(id)
-                    .subscribe((response: any) => {
+                this.dataTransferService.getFullPath(id).subscribe({
+                    next: (response: any) => {
                         const coordinates = response.data.percorso;
                         this.loaded = true;
                         this.isCoordinatesLoaded = true;
@@ -109,17 +107,24 @@ export class FermatePage implements OnInit, OnDestroy {
                         setTimeout(() => {
                             this.leafletMap(coordinates);
                         }, 1000);
-                    });
+                    },
+                    error: (error) => {
+                        this.loaded = true;
+                        this.presentCustomAlert(
+                            'Errore durante il recupero dei percorsi, riprovare'
+                        );
+                        console.error(error);
+                    },
+                });
 
                 this.loaded = true;
                 this.errorMessage = null;
             },
             error: (error) => {
                 this.loaded = true;
-                console.error(error);
-                this.errorMessage =
-                    'Verificare la connessione e riprovare. ' + error;
-                this.isAlertOpen = true;
+                this.presentCustomAlert(
+                    'Errore nel recupero dei dati, tornare indietro e riprovare ' + error
+                );
             },
         });
     }
