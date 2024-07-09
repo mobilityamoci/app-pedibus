@@ -55,7 +55,7 @@
     </div>
 
     <div id="code-scanner">
-        <zxing-scanner (scanSuccess)="onCodeResult($event)"></zxing-scanner>
+        <zxing-scanner #scanner [autostart]="false" ></zxing-scanner>
     </div>
 
     <div (click)="onClick()" id="piacenza">
@@ -103,6 +103,10 @@
             </defs>
         </svg>
     </div>
+
+    <ion-button expand="full" (click)="chooseAndScan()"
+        >Select Image from Gallery</ion-button
+    >
 </ion-content>
 
 <div class="custom-alert-card" *ngIf="isAlertOpen">

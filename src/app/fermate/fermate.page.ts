@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { DataTransferService } from '../data-transfer.service';
+import { DataTransferService } from '../services/data-transfer.service';
 import * as Leaflet from 'leaflet';
 import { Guardian } from '../interfaces/Guardian';
-import { AuthService } from '../authService';
+import { AuthService } from '../services/authService';
 import { Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
 @Component({
@@ -42,16 +42,17 @@ export class FermatePage implements OnInit, OnDestroy {
         //     });
     }
 
+    ionViewDidEnter() {
+        this.loadGuardian()
+    }
+
     presentCustomAlert(errorMessage: string) {
         this.errorMessage = errorMessage;
         this.isAlertOpen = true;
     }
 
-    onModalDismiss() {
-        this.isAlertOpen = false;
-    }
-
     dismissAlert() {
+        this.ngOnDestroy()
         this.isAlertOpen = false;
         this.route.navigate(['/home'])
     }
@@ -60,10 +61,10 @@ export class FermatePage implements OnInit, OnDestroy {
         const id = this.authSrv.getId();
 
         if (!id) {
-            this.loaded = true;
-            this.isCoordinatesLoaded = true
+            // this.loaded = true;
+            // this.isCoordinatesLoaded = true
             this.presentCustomAlert(
-                'ID non presente, si prega di scansionare il codice QR di nuovo'
+                'Si prega di scansionare il codice QR di nuovo'
             );
 
             return;
@@ -87,7 +88,6 @@ export class FermatePage implements OnInit, OnDestroy {
                         orario: formattedTime,
                         coordinates: guardianData.coordinates,
                     });
-                    console.log(this.stops);
 
                     this.qrData.nome = guardianData.nome;
                     this.qrData.indirizzo = guardianData.indirizzo;
@@ -111,7 +111,7 @@ export class FermatePage implements OnInit, OnDestroy {
                     error: (error) => {
                         this.loaded = true;
                         this.presentCustomAlert(
-                            'Errore durante il recupero dei percorsi, riprovare'
+                            'Errore durante il recupero del percorso, riprovare'
                         );
                         console.error(error);
                     },
@@ -122,8 +122,10 @@ export class FermatePage implements OnInit, OnDestroy {
             },
             error: (error) => {
                 this.loaded = true;
+                console.log(error);
+                
                 this.presentCustomAlert(
-                    'Errore nel recupero dei dati, tornare indietro e riprovare ' + error
+                    'Errore nel recupero dei dati, tornare indietro e riprovare. ' + error.error.message
                 );
             },
         });
@@ -147,7 +149,7 @@ export class FermatePage implements OnInit, OnDestroy {
         }
 
         let customPoint = Leaflet.icon({
-            iconUrl: '../../assets/location-dot-solid.svg',
+            iconUrl: '../../assets/location-dot-solid (5).svg',
         });
 
         this.stops.forEach((stop) => {

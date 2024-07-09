@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { DataTransferService } from '../data-transfer.service';
+import { DataTransferService } from '../services/data-transfer.service';
 import { Router } from '@angular/router';
 import { ZXingScannerComponent } from '@zxing/ngx-scanner';
-import { AuthService } from '../authService';
+import { AuthService } from '../services/authService';
 @Component({
     selector: 'app-accompagnatore',
     templateUrl: './accompagnatore.page.html',

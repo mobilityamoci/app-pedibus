@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { DataTransferService } from '../data-transfer.service';
+import { DataTransferService } from '../services/data-transfer.service';
 import * as Leaflet from 'leaflet';
 import { IonDatetime, NavController } from '@ionic/angular';
 import { Studente } from '../interfaces/studente';
-import { AuthService } from '../authService';
+import { AuthService } from '../services/authService';
 
 @Component({
     selector: 'app-bambino',
@@ -29,8 +29,13 @@ export class BambinoPage implements OnInit, OnDestroy {
         private dataTransferService: DataTransferService,
         private authSrv: AuthService
     ) {}
+
     ngOnInit(): void {
         this.loadChild();
+    }
+
+    ionViewDidEnter() {
+        this.loadChild()
     }
 
     presentCustomAlert(errorMessage: string) {
@@ -38,13 +43,11 @@ export class BambinoPage implements OnInit, OnDestroy {
         this.isAlertOpen = true;
     }
 
-    onModalDismiss() {
-        this.isAlertOpen = false;
-    }
-
     dismissAlert() {
         this.isAlertOpen = false;
-        this.route.navigate(['/home'])
+        this.authSrv.removeId();
+        this.authSrv.removeToken();
+        this.route.navigate(['/home']);
     }
 
     @ViewChild(IonDatetime) datetime!: IonDatetime;
@@ -82,7 +85,7 @@ export class BambinoPage implements OnInit, OnDestroy {
             error: (error) => {
                 console.error('Error fetching student data', error);
                 this.presentCustomAlert(
-                    'Errore nel recupero dei dati, tornare indietro e riprovare'
+                    error.error.message
                 );
             },
         });
@@ -128,7 +131,7 @@ export class BambinoPage implements OnInit, OnDestroy {
 
         const [latitude, longitude] = this.qrData.fermata_coord;
         let customPoint = Leaflet.icon({
-            iconUrl: '../../assets/location-dot-solid (3).svg',
+            iconUrl: '../../assets/location-dot-solid (5).svg',
         });
 
         Leaflet.marker([latitude, longitude], {
