@@ -23,7 +23,7 @@ export class QrFromDeviceService {
         return null;
       } else {
         console.error('Error scanning QR code:', e);
-        return null;  // Возвращаем null, чтобы обработать ошибку в вызывающем коде
+        return null;
       }
     }
   }

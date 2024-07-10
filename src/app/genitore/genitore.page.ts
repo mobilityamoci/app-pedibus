@@ -16,8 +16,15 @@ import { QrFromDeviceService } from '../services/qrFromDevice.service';
     templateUrl: './genitore.page.html',
     styleUrls: ['./genitore.page.scss'],
 })
-export class GenitorePage implements OnInit, OnDestroy {
+export class GenitorePage {
     qrResultString?: string;
+    isScanActive: boolean = false;
+    isScanBtnActive: boolean = false;
+
+    availableDevices!: MediaDeviceInfo[];
+    selectedDevice!: MediaDeviceInfo;
+
+    public isLoading: boolean = false;
     isButtonDisabled: boolean = true;
     public isAlertOpen = false;
     errorMessage: string | null = null;
@@ -32,14 +39,14 @@ export class GenitorePage implements OnInit, OnDestroy {
 
     @ViewChild(ZXingScannerComponent) scanner!: ZXingScannerComponent;
 
-    ionViewDidEnter() {
-        this.scanner.scanStart();
-    }
-
-    ngOnInit(): void {
-        setTimeout(() => {
-            this.isButtonDisabled = false;
-        }, 4000);
+    scanForDevices() {
+        const codeReader = new ZXingScannerComponent();
+        codeReader.camerasFound.subscribe((devices: MediaDeviceInfo[]) => {
+            this.availableDevices = devices;
+            if (devices.length > 0) {
+                this.selectedDevice = devices[0];
+            }
+        });
     }
 
     stopScan() {
@@ -57,94 +64,106 @@ export class GenitorePage implements OnInit, OnDestroy {
 
     dismissAlert() {
         this.isAlertOpen = false;
-        this.scanner.scanStart();
     }
 
     onClick() {
-        this.scanner.scanStart();
+        this.isScanActive = !this.isScanActive;
+        this.isScanBtnActive = true;
+        setTimeout(() => {
+            this.isScanBtnActive = false;
+        }, 3500);
+
+        console.log(this.isScanBtnActive);
     }
 
     async chooseAndScan() {
-    if (this.isProcessing) return;
-    this.isProcessing = true;
+        if (this.isProcessing) return;
+        this.isProcessing = true;
+        this.isLoading = true
+        try {
+            const image = await Camera.getPhoto({
+                quality: 90,
+                allowEditing: false,
+                resultType: CameraResultType.Uri,
+                source: CameraSource.Photos,
+            });
 
-    try {
-        const image = await Camera.getPhoto({
-            quality: 90,
-            allowEditing: false,
-            resultType: CameraResultType.Uri,
-            source: CameraSource.Photos,
-        });
+            if (image.webPath) {
+                console.log('Image path:', image.webPath);
 
-        if (image.webPath) {
-            console.log('Image path:', image.webPath);
+                await new Promise((resolve) => setTimeout(resolve, 5000));
 
-            await new Promise((resolve) => setTimeout(resolve, 5000));
-
-            const qrID = await this.qrFromDeviceSrv.scanImage(image.webPath);
-            console.log('QR ID:', qrID);
-
-            await new Promise((resolve) => setTimeout(resolve, 5000));
-            const qrIDRetry = await this.qrFromDeviceSrv.scanImage(image.webPath);
-            console.log('QR ID Retry:', qrIDRetry);
-
-            if (qrID) {
-                this.onCodeResult(qrID);
-            } else if (qrIDRetry) {
-                console.log('Processing QR ID Retry:', qrIDRetry);
-                this.scanner.scanStop();
-                this.dataTransferService
-                    .authenticate(qrIDRetry, 'parent')
-                    .subscribe({
-                        next: (response) => {
-                            this.authServ.setToken(response.data.token);
-                            this.router.navigate(['/bambino']);
-                        },
-                        error: (error) => {
-                            console.error('Error fetching data', error);
-                            this.scanner.scanStop();
-                            this.presentCustomAlert(
-                                'QR code sbagliato, verificare il QR code e riprovare'
-                            );
-                        },
-                    });
-            } else {
-                this.presentCustomAlert(
-                    "QR code non valido o non trovato nell'immagine selezionata"
+                const qrID = await this.qrFromDeviceSrv.scanImage(
+                    image.webPath
                 );
-            }
-        }
-    } catch (e) {
-        console.error('Error taking photo', e);
-        this.presentCustomAlert('Impossibile accedere alla galleria');
-    } finally {
-        this.isProcessing = false;
-    }
-}
+                console.log('QR ID:', qrID);
 
-    
+                await new Promise((resolve) => setTimeout(resolve, 5000));
+                const qrIDRetry = await this.qrFromDeviceSrv.scanImage(
+                    image.webPath
+                );
+                console.log('QR ID Retry:', qrIDRetry);
+
+                if (qrID) {
+                    this.onCodeResult(qrID);
+                } else if (qrIDRetry) {
+                    console.log('Processing QR ID Retry:', qrIDRetry);
+                    this.dataTransferService
+                        .authenticate(qrIDRetry, 'parent')
+                        .subscribe({
+                            next: (response) => {
+                                this.authServ.setToken(response.data.token);
+                                this.isLoading = false
+                                this.router.navigate(['/bambino']);
+                            },
+                            error: (error) => {
+                                console.error('Error fetching data', error);
+                                this.isLoading = false
+                                this.presentCustomAlert(
+                                    'QR code sbagliato, verificare il QR code e riprovare'
+                                );
+                            },
+                        });
+                } else {
+                    this.isLoading = false
+                    this.presentCustomAlert(
+                        "QR code non valido o non trovato nell'immagine selezionata"
+                    );
+                }
+            }
+        } catch (e) {
+            console.error('Error taking photo', e);
+            this.isLoading = false
+
+            this.presentCustomAlert('Immagine non selezionata');
+        } finally {
+            this.isProcessing = false;
+        }
+    }
 
     onCodeResult(resultString: string) {
-        console.log('Processing QR code result:', resultString);
-        this.scanner.scanStop();
-        this.dataTransferService
-            .authenticate(resultString, 'parent')
-            .subscribe({
-                next: (response) => {
-                    this.authServ.setToken(response.data.token);
-                    this.router.navigate(['/bambino']);
-                },
-                error: (error) => {
-                    console.error('Error fetching data', error);
-                    this.scanner.scanStop();
-                    this.presentCustomAlert(
-                        'QR code sbagliato, verificare il QR code e riprovare'
-                    );
-                },
-            });
-    }
+        this.isLoading = true
+        if (this.isScanActive) {
+            this.scanner.scanStop();
+            this.dataTransferService
+                .authenticate(resultString, 'parent')
+                .subscribe({
+                    next: (response) => {
+                        this.authServ.setToken(response.data.token);
+                        this.isLoading = false
 
-    ngOnDestroy() {
-        this.scanner.scanStop();
+                        this.router.navigate(['/bambino']);
+                    },
+                    error: (error) => {
+                        console.error('Error fetching data', error);
+                        this.scanner.scanStop();
+                        this.isScanActive = !this.isScanActive;
+
+                        this.presentCustomAlert(
+                            'QR code sbagliato, verificare il QR code e riprovare'
+                        );
+                    },
+                });
+        }
     }
 }

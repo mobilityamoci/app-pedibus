@@ -2,8 +2,6 @@
     <ion-toolbar>
         <ion-buttons slot="start">
             <ion-back-button
-                (click)="stopScan()"
-                [disabled]="isButtonDisabled"
                 defaultHref="/home"
             ></ion-back-button>
         </ion-buttons>
@@ -57,8 +55,23 @@
     <div id="code-scanner">
         @if(isLoading){
         <ion-spinner name="lines"> </ion-spinner>
+        } @if (isScanActive) {
+        <zxing-scanner
+            #scanner
+            [device]="selectedDevice"
+            (scanSuccess)="onCodeResult($event)"
+        ></zxing-scanner>
         }
-        <zxing-scanner (scanSuccess)="onCodeResult($event)"></zxing-scanner>
+    </div>
+
+    <div id="scanner-btn-container">
+        <ion-button [disabled]="isScanBtnActive" (click)="onClick()">
+            {{ isScanActive ? 'Disattiva' : 'Attiva' }} lo scanner
+        </ion-button>
+
+        <ion-button (click)="chooseAndScan()"
+            >Seleziona immagine dal dispositivo
+        </ion-button>
     </div>
 
     <div id="piacenza">
@@ -114,7 +127,7 @@
             <ion-card-title>Errore</ion-card-title>
         </ion-card-header>
         <ion-card-content>
-            <p>Errore: {{ errorMessage }}</p>
+            <p>{{ errorMessage }}</p>
             <img
                 src="../../assets/SvgjsG1008socket.svg"
                 alt="Error image"

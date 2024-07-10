@@ -39,7 +39,7 @@
 @import "~leaflet/dist/leaflet.css";
 * {
     --background: rgb(98, 101, 171);
-    --ion-color-base: var(--ion-color-primary, transparent) !important;
+    --ion-color-base: var(--ion-color-primary, transparent);
     font-family: "Inter", sans-serif;
 }
 
@@ -62,67 +62,10 @@
     }
 }
 
-// ion-alert {
-//     h2{
-//         color: black;
-//     }
-//     .alert-head {
-//         background: white;
-//         border: none;
-//         padding: 1rem !important;
-
-//         .alert-title{
-//             color: black;
-//         }
-//     }
-
-//     .alert-message {
-//         background: white;
-//         color: red;
-//         padding: 1rem 1rem !important;
-//         height: 15vh !important;
-//         width: 90vw !important;
-//     }
-
-//     .alert-button-group {
-//         background: white;
-//         display: flex;
-//         align-items: center;
-//         justify-content: center;
-//     }
-
-//     .alert-button {
-//         margin: 0 auto !important;
-//         background: rgba(98, 101, 171, 1) !important;
-//         padding: 1rem;
-//         border-radius: 15px !important;
-//         width: 100%;
-
-//         span{
-//             text-align: center;
-//         }
-
-//     }
-
-//     .alert-button-inner.sc-ion-alert-md{
-//         justify-content: center !important;
-//         text-transform: capitalize;
-//     }
-
-//     .ion-overlay-wrapper {
-//         max-width: 96vw !important;
-//     }
-
-//     .alert-wrapper {
-//         border: 1px solid rgba(98, 101, 171, 1);
-//         border-radius: 15px !important;
-//     }
-// }
-
 .modal-open {
     filter: blur(8px);
     --background: rgba(100, 100, 100, 0.3) !important;
-    background: rgba(100, 100, 100, 0.3);
+    background: rgba(100, 100, 100, 0.3) !important;
 }
 
 .custom-alert-card {
@@ -175,4 +118,35 @@
         max-width: 100%;
         height: auto;
     }
+}
+
+#scanner-btn-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-bottom: 2rem;
+
+    ion-button {
+        width: 60vw;
+        margin-bottom: 0.5rem;
+        font-size: larger;
+        text-transform: initial;
+        color: rgba(98, 101, 171, 1);
+        --background: white;
+        --padding-top: 1rem;
+        --padding-bottom: 1rem;
+        --border-radius: 20px;
+    }
+}
+
+#piacenza {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    // position: fixed;
+    bottom: 3rem;
+    left: 50%;
+    right: 50%;
+    flex-direction: column;
 }

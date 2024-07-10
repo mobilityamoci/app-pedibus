@@ -2,8 +2,6 @@
     <ion-toolbar>
         <ion-buttons slot="start">
             <ion-back-button
-                (click)="stopScan()"
-                [disabled]="isButtonDisabled"
                 defaultHref="/home"
             ></ion-back-button>
         </ion-buttons>
@@ -55,10 +53,33 @@
     </div>
 
     <div id="code-scanner">
-        <zxing-scanner #scanner [autostart]="false" ></zxing-scanner>
+
+        @if(isLoading){
+            <ion-spinner name="lines"> </ion-spinner>
+        } 
+        
+        @if (isScanActive) {
+        <zxing-scanner
+            #scanner
+            [device]="selectedDevice"
+            (scanSuccess)="onCodeResult($event)"
+        ></zxing-scanner>
+
+        }
     </div>
 
-    <div (click)="onClick()" id="piacenza">
+    <div id="scanner-btn-container">
+        <ion-button [disabled]="isScanBtnActive" (click)="onClick()">
+            {{ isScanActive ? 'Disattiva' : 'Attiva' }} lo scanner
+        </ion-button>
+
+        <ion-button
+            (click)="chooseAndScan()"
+            >Seleziona immagine dal dispositivo
+        </ion-button>
+    </div>
+
+    <div id="piacenza">
         <svg
             width="31"
             height="43"
@@ -104,9 +125,7 @@
         </svg>
     </div>
 
-    <ion-button expand="full" (click)="chooseAndScan()"
-        >Select Image from Gallery</ion-button
-    >
+    
 </ion-content>
 
 <div class="custom-alert-card" *ngIf="isAlertOpen">
@@ -115,7 +134,7 @@
             <ion-card-title>Errore</ion-card-title>
         </ion-card-header>
         <ion-card-content>
-            <p>Errore: {{ errorMessage }}</p>
+            <p>{{ errorMessage }}</p>
             <img
                 src="../../assets/SvgjsG1008socket.svg"
                 alt="Error image"
