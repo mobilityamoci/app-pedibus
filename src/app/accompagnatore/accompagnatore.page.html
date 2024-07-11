@@ -1,9 +1,7 @@
 <ion-header class="ion-no-border">
     <ion-toolbar>
         <ion-buttons slot="start">
-            <ion-back-button
-                defaultHref="/home"
-            ></ion-back-button>
+            <ion-back-button [disabled]="isScanBtnActive" (click)="checkScan()" defaultHref="/home"></ion-back-button>
         </ion-buttons>
         <ion-title> Accompagnatore </ion-title>
     </ion-toolbar>
@@ -52,7 +50,7 @@
         <p><a href="">Non hai ricevuto nessun codice?</a></p>
     </div>
 
-    <div id="code-scanner">
+    <div [ngClass]="{'bg-none': isScanActive}" id="code-scanner">
         @if(isLoading){
         <ion-spinner name="lines"> </ion-spinner>
         } @if (isScanActive) {

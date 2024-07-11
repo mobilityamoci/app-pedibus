@@ -36,29 +36,3 @@
         }
     }
 }
-
-#code-scanner {
-    position: relative;
-    margin: 50px auto;
-    margin-top: 30px;
-    width: 75vw;
-    height: 30vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: black;
-
-    ion-spinner {
-        position: absolute;
-        width: 80%;
-        height: 80%;
-        color: rgba(213, 235, 244, 1);
-        background: none;
-    }
-
-    video {
-        width: 100%;
-        height: 70%;
-        object-fit: contain;
-    }
-}

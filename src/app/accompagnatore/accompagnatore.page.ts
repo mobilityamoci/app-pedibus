@@ -52,6 +52,12 @@ export class AccompagnatorePage {
         console.log(this.isScanBtnActive);
     }
 
+    checkScan(){
+        if (this.isScanActive){
+            this.scanner.scanStop()
+        }
+    }
+
     presentCustomAlert(errorMessage: string) {
         this.errorMessage = errorMessage;
         this.isAlertOpen = true;

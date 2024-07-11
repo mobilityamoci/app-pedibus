@@ -32,14 +32,6 @@ export class FermatePage implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.loadGuardian();
-        // this.dataTransferService
-        //     .getFermata(this.qrData.id)
-        //     .subscribe((data) => {
-        //         console.log(this.qrData.id + '<<<<<<<<<ID>>>>>>>>>>>>>>>');
-
-        //         this.qrData = data;
-
-        //     });
     }
 
     ionViewDidEnter() {

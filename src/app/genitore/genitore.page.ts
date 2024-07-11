@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import {
     Camera,
     CameraResultType,
@@ -49,6 +49,12 @@ export class GenitorePage {
         });
     }
 
+    checkScan(){
+        if (this.isScanActive){
+            this.scanner.scanStop()
+        }
+    }
+
     stopScan() {
         this.scanner.scanStop();
     }
@@ -58,12 +64,9 @@ export class GenitorePage {
         this.isAlertOpen = true;
     }
 
-    onModalDismiss() {
-        this.isAlertOpen = false;
-    }
-
     dismissAlert() {
         this.isAlertOpen = false;
+        this.isLoading = false;
     }
 
     onClick() {

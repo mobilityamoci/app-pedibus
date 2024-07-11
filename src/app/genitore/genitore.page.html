@@ -1,15 +1,13 @@
 <ion-header class="ion-no-border">
     <ion-toolbar>
         <ion-buttons slot="start">
-            <ion-back-button
-                defaultHref="/home"
-            ></ion-back-button>
+            <ion-back-button [disabled]="isScanBtnActive" (click)="checkScan()" defaultHref="/home"></ion-back-button>
         </ion-buttons>
         <ion-title> Genitore Page </ion-title>
     </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content [ngClass]="{ 'modal-open': isAlertOpen }">
     <div class="container">
         <div id="logo">
             <h1>Pedibus</h1>
@@ -52,13 +50,10 @@
         <p><a href="">Non hai ricevuto nessun codice?</a></p>
     </div>
 
-    <div id="code-scanner">
-
+    <div [ngClass]="{'bg-none': isScanActive}" id="code-scanner">
         @if(isLoading){
-            <ion-spinner name="lines"> </ion-spinner>
-        } 
-        
-        @if (isScanActive) {
+        <ion-spinner name="lines"> </ion-spinner>
+        } @if (isScanActive) {
         <zxing-scanner
             #scanner
             [device]="selectedDevice"
@@ -73,8 +68,7 @@
             {{ isScanActive ? 'Disattiva' : 'Attiva' }} lo scanner
         </ion-button>
 
-        <ion-button
-            (click)="chooseAndScan()"
+        <ion-button (click)="chooseAndScan()"
             >Seleziona immagine dal dispositivo
         </ion-button>
     </div>
@@ -124,8 +118,6 @@
             </defs>
         </svg>
     </div>
-
-    
 </ion-content>
 
 <div class="custom-alert-card" *ngIf="isAlertOpen">
